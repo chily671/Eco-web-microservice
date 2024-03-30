@@ -4,15 +4,14 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import  ShopContextProvider  from './Context/ShopContext';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   
   <ShopContextProvider>
       <React.StrictMode>
-    
     <App />
-    
   </React.StrictMode>
   </ShopContextProvider>
     

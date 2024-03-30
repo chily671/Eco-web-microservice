@@ -2,7 +2,8 @@ import React, { createContext, useState } from 'react'
 import { useEffect } from 'react';
 
 
-
+//ShopContext được tạo bằng createContext() và được export ra ngoài 
+//để có thể sử dụng ở bất kỳ đâu trong ứng dụng.
 export const ShopContext = createContext(null);
 const getDefaultCart = ()=>{
     let cart = {};
@@ -29,7 +30,6 @@ const ShopContextProvider = (props) => {
                     'auth-token':`${localStorage.getItem('auth-token')}`,
                     'Content-Type':'application/json',
                 },
-                body:"",
             }).then((response)=>response.json())
             .then((data)=>setCartItems(data));
         }
@@ -76,7 +76,7 @@ const ShopContextProvider = (props) => {
         {
             if(cartItems[item]>0)
             {
-                let itemInfo = all_product.find((product)=>product.id===Number(item));
+                let itemInfo = all_product.find((product)=>product.id===item);
                 totalAmout += itemInfo.new_price * cartItems[item];
             }
         }
@@ -94,6 +94,8 @@ const ShopContextProvider = (props) => {
         }
         return totalItem;
     }
+
+  
 
     const contextValue = {getTotalCartItems, getTotalCartAmount, all_product, cartItems, addToCart, removeFromCart}
     return(

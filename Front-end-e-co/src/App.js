@@ -11,9 +11,12 @@ import Footer from './Components/Footer/Footer';
 import men_banner from './Components/Assets/banner_mens.png'
 import women_banner from './Components/Assets/banner_women.png'
 import kids_banner from './Components/Assets/banner_kids.png'
-
+import Login from './Pages/Login';
+import Signup from './Pages/Signup';
+import CheckoutPage from './Pages/Checkout';
 
 function App() {
+
   return (
     <div >
       <BrowserRouter>
@@ -26,12 +29,12 @@ function App() {
         <Route path='product'>
           <Route path=':productId' element={<Product/>}/>
         </Route>
+        <Route path='/checkout' element={<CheckoutPage/>}/>
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/login' element={<LoginSignup/>}/>
       </Routes>
       <Footer/>
       </BrowserRouter>
-      
     </div>
   );
 }
