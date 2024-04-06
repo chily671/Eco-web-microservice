@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { ShopContext } from "../../Context/ShopContext";
 
 const serverURL = "http://localhost:4000"
 // Renders errors or successfull transactions on the screen.
@@ -8,6 +9,7 @@ function Message({ content }) {
 }
 
 function PayPalment() {
+  const {getQuantityItem, getIdItem} = useContext(ShopContext);
   const initialOptions = {
     "client-id": "AQB4nqI-T6EZUicX8m-mfRWeJjP0u1_ISZujF9zFFKRgQUof30s1cdNrmXBNtH5ErDM-KmrJWJTS53GI",
     "enable-funding": "card",
@@ -37,8 +39,8 @@ function PayPalment() {
                 body: JSON.stringify({
                   cart: [
                     {
-                      "id":  "2",
-                      "quantity": "2",
+                      "id":  getIdItem(),
+                      "quantity": getQuantityItem(),
                     },
                   ],
                 }),

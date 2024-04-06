@@ -1,0 +1,40 @@
+version: '3'
+services:
+  users-service:
+    build: ./Users-Service/docker
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./Users-Service:/app
+    environment:
+      - PORT=4000
+    depends_on:
+      - mongodb1
+  mongodb1:
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  products-service:
+    build: ./Products-Service/docker
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./Products-Service:/app
+    environment:
+      - PORT=5000
+    depends_on:
+      - mongodb2
+  mongodb2:
+    image: mongo
+    ports:
+      - "27017:27017"
+  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ./rabbitmq:/var/lib/rabbitmq/
