@@ -1,7 +1,7 @@
 version: '3'
 services:
   users-service:
-    build: ./Users-Service/docker
+    build: ./Users-Service/
     ports:
       - "4000:4000"
     volumes:
@@ -16,7 +16,7 @@ services:
       - "27017:27017"
 
   products-service:
-    build: ./Products-Service/docker
+    build: ./Products-service/
     ports:
       - "5000:5000"
     volumes:
@@ -28,7 +28,7 @@ services:
   mongodb2:
     image: mongo
     ports:
-      - "27017:27017"
+      - "27018:27017"
   
   rabbitmq:
     image: rabbitmq:3-management-alpine

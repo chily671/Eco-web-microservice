@@ -1,33 +1,15 @@
-const { databaseConnection } = require('./Database-products/connection');
-const port = process.env.PORT || 5000;
-const express = require("express");
-const expressApp = require('./express-app');
+const express = require('express');
+
+const app = express();
+
+app.use(express.json());
+
+app.use('/', (req,res,next) => {
+
+    return res.status(200).json({"msg": "Hello from Products-Service"})
+})
 
 
-const StartServer = async() => {
-
-    const app = express();
-    
-    await databaseConnection();
-
-    await expressApp(app);
-    
-
-    app.listen(port,(error)=>{
-        if (!error) {
-            console.log("server Running on Port" + port)
-        }
-        else {
-            console.log("Error : "+error)
-        }
-    })
-    
-
-}
-
-StartServer();
-
-
-
-
-
+app.listen(5000, () => {
+    console.log('Products is Listening to Port 5000')
+})
