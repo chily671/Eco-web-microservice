@@ -68,6 +68,15 @@ class UserService {
         }
     }
 
+    async ClearCart(userId) {
+        try { 
+            const cart = await this.repository.clearCart(userId);
+            return cart;
+        } catch (error) {
+            console.log(error);
+            return { success: false, message: 'Internal Server Error' };
+        }
+    }
     async GetUserCart(userId) {
         try {
             const cart = await this.repository.getUserCart(userId);
@@ -87,11 +96,20 @@ class UserService {
             return res.status(500).json({ message: 'Internal Server Error' });
         }
     }
-    async GetUser(req, res) {
+    async GetUser(userId) {
         try {
-            const { email } = req.user;
-            const user = await User.findOne({ email });
-            return res.status(200).json(FormateData(user));
+            const User = await this.repository.getUser(userId);
+            return res.status(200).json(FormateData(User));
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ message: 'Internal Server Error' });
+        }
+    }
+
+    async GetUserById(userId) {
+        try {
+            const User = await this.repository.getUserbyID(userId);
+            return res.status(200).json(User);
         } catch (error) {
             console.log(error);
             return res.status(500).json({ message: 'Internal Server Error' });

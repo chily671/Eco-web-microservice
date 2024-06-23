@@ -11,6 +11,7 @@ const ShopContextProvider = (props) => {
     const [all_product,setAll_Product] = useState([]);
     const [cartItems, setCartItems] = useState([]);
     const [totalCartAmount, setTotalCartAmount] = useState(0);
+    const [orderList, setOrderList] = useState([]);
 
     useEffect(()=>{
         fetch('/allproduct')
@@ -18,8 +19,7 @@ const ShopContextProvider = (props) => {
         .then((data)=>setAll_Product(data))
     
         if(localStorage.getItem('auth-token')){
-            fetch('/user/getcart',{
-                method:'POST',
+            fetch('/user/cart',{
                 headers:{
                     Accept:'application/form-data',
                     'auth-token':`${localStorage.getItem('auth-token')}`,
@@ -28,7 +28,18 @@ const ShopContextProvider = (props) => {
             }).then((response)=>response.json())
             .then((data)=>setCartItems(data))
             .then((data)=>console.log(data));
-        }
+        
+        fetch('/order/order',{
+            headers:{
+                Accept:'application/form-data',
+                'auth-token':`${localStorage.getItem('auth-token')}`,
+                'Content-Type':'application/json',
+            },
+        }).then((response)=>response.json())
+        .then((data)=>setOrderList(data))
+        .then((data)=>console.log(data));
+        
+    }
     },[])
 
     useEffect(()=>{
@@ -107,9 +118,18 @@ const ShopContextProvider = (props) => {
         return totalItem;
     }
 
+    const getTotalOrderItems = () => {
+        let totalItem = 0;
+        for(const item in orderList)
+        {
+            totalItem += 1;
+        }
+        return totalItem;
+    }
+
   
 
-    const contextValue = { getTotalCartItems, getTotalCartAmount, all_product, cartItems, addToCart, removeFromCart, totalCartAmount}
+    const contextValue = { getTotalCartItems, getTotalCartAmount, all_product, cartItems, addToCart, removeFromCart, totalCartAmount, orderList, getTotalOrderItems}
     return(
 
         <ShopContext.Provider value={contextValue}>

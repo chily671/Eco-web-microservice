@@ -42,15 +42,38 @@ class UserRepository {
             }
             await UserModel.findByIdAndUpdate(userId, { cartData: cart, orderData: order });
             console.log('Product Added to Cart');
-            return { success: true, message: 'Product Added to Cart' };
+            return {   success: true, message: 'Product Added to Cart', userID: userId, product: order};
         } catch (error) {
+            return error;
+        }
+    }
+
+    async clearCart(userId) {
+        try { 
+            const user = await UserModel.findById(userId);
+            let cart = user.cartData;
+            let order = user.orderData;
+            const userUpdate = await UserModel.findByIdAndUpdate(userId, { cartData: {}, orderData: [] });
+            console.log('Cart Cleared');
+            return {   success: true, message: 'Cart Cleared', userID: userId, cart: cart, order: order};
+        }
+        catch (error) {
             return error;
         }
     }
 
     async getUser({email}){
         try {
-            const response = await UserModel.findOne({email});
+            const response = await UserModel.findOne({ email });
+            return response;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    async getUserbyID(userID){
+        try {
+            const response = await UserModel.findOne(userID);
             return response;
         } catch (error) {
             return error;

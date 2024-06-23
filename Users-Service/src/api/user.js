@@ -1,8 +1,8 @@
 const UserService = require('../services/user-service');
 const UserAuth = require('./middlewares/auth');
-const { SubscribeMessage } = require('../utils');
+const { SubscribeMessage, PublishMessage } = require('../utils');
 const jwt = require('jsonwebtoken');
-const { APP_SECRET } = require('../config');
+const { APP_SECRET, ORDER_SERVICE } = require('../config');
 
 module.exports = async (app, channel) => {
     
@@ -47,7 +47,21 @@ module.exports = async (app, channel) => {
         }
     });
 
-    app.post('/getcart', fetchUser, async (req, res) => {
+    // Creating Clear Cart Endpoint
+    app.post('/cart', fetchUser, async (req, res) => {
+        try {
+            const  userId = req.user;
+            console.log('userId on post:', userId);
+            const cart = await service.ClearCart(userId.id);
+            return res.status(200).json(cart);
+        } catch (error) {
+            return res.status(400).json({ message: error.message });
+        }
+    }
+)
+
+    
+    app.get('/cart', fetchUser, async (req, res) => {
         try {
             const  userId = req.user;
             console.log('userId on get:', userId);
@@ -82,6 +96,17 @@ module.exports = async (app, channel) => {
             return res.status(200).json(user);
         } catch (error) {
             console.log(error);
+            return res.status(400).json({ message: error.message });
+        }
+    });
+
+    app.post('/user', fetchUser, async (req, res) => {
+        try {
+            const  userId = req.user;
+            const user = await service.GetUserById(userId.id);
+            console.log(user)
+            return res.status(200).json(user);
+        } catch (error) {
             return res.status(400).json({ message: error.message });
         }
     });

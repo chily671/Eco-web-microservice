@@ -2,7 +2,7 @@ const express = require('express');
 const cors  = require('cors');
 const path = require('path');
 const { order, appEvents } = require('./api');
-const { CreateChannel } = require('./src/utils')
+const { CreateChannel } = require('./utils')
 
 module.exports = async (app) => {
 

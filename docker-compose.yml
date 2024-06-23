@@ -7,13 +7,12 @@ services:
     volumes:
       - ./Users-Service:/app
     environment:
-      - PORT=4000
+      - PORT=5001
     depends_on:
       - mongodb1
   mongodb1:
     image: mongo
-    ports:
-      - "27017:27017"
+
 
   products-service:
     build: ./Products-service/
@@ -27,8 +26,34 @@ services:
       - mongodb2
   mongodb2:
     image: mongo
+
+  orders-service:
+    build: ./Order-service/
     ports:
-      - "27018:27017"
+      - "6000:6000"
+    volumes:
+      - ./Orders-Service:/app
+    environment:
+      - PORT=5002
+    depends_on:
+      - mongodb3
+  mongodb3:
+     image: mongo
+
+      
+  getway-service:
+    build: ./gateway/
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./Getway-Service:/app
+    environment:
+      - PORT=5555
+    depends_on:
+      - users-service
+      - products-service
+      - orders-service
+      - rabbitmq
   
   rabbitmq:
     image: rabbitmq:3-management-alpine
@@ -38,3 +63,14 @@ services:
         - 15672:15672
     volumes:
         - ./rabbitmq:/var/lib/rabbitmq/
+
+  frontend:
+    build: ./Front-end-e-co/
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+    environment:
+      - PORT=3000
+    depends_on:
+      - getway-service

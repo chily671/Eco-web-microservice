@@ -10,60 +10,23 @@ class OrderRepository {
         return orders;
     }
 
-    async CreateNewOrder(customerId, txnId){
-
-        //required to verify payment through TxnId
-
-        const cart = await CartModel.findOne({ customerId: customerId })
-
-        if(cart){         
-            
-            let amount = 0;   
-
-            let cartItems = cart.items;
-
-            if(cartItems.length > 0){
-                //process Order
-                
-                cartItems.map(item => {
-                    amount += parseInt(item.product.price) *  parseInt(item.unit);   
-                });
-    
-                const orderId = uuidv4();
-    
-                const order = new OrderModel({
-                    orderId,
-                    customerId,
-                    amount,
-                    status: 'received',
-                    items: cartItems
-                })
-    
-                cart.items = [];
-                
-                const orderResult = await order.save();
-                await cart.save();
-                return orderResult;
-
-
-            }
-
- 
-
-        }
-
-        return {}
-    }
-
+    //create order by data from subcribe event
     async CreateOrder(data) {
         try {
             const order = new OrderModel(data);
+            console.log('Order Created: ', order);
             const response = await order.save();
             return response;
         } catch (error) {
             return error;
         }
     }
-}
 
+    async GetUserOrder(data) {
+        console.log('Data:', data);
+        const orders = await OrderModel.find({userId: data});
+        console.log('User Orders:', orders);
+        return orders;
+    }
+}
 module.exports = OrderRepository

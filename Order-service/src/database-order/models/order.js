@@ -3,25 +3,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const OrderSchema = new Schema({
-    orderId: { type: String },
-    userId: { type: String },
-    amount: { type: Number },
-    status: { type: String },
-    items: [
-        {   
-            product: {
-                _id: { type: String, require: true},
-                name: { type: String },
-                desc: { type: String },
-                banner: { type: String },
-                type: { type: String },
-                unit: { type: Number },
-                price: { type: Number },
-                suplier: { type: String },
-            } ,
-            unit: { type: Number, require: true} 
-        }
-    ]
+    id: {type: String, required: true, unique: true},
+  userId:  String,
+  products: Object,
+  total: Number,
+  fullname: String,
+  email: String,
+  phone: String,
+  address: String,
+  province: String,
+  city: String,
+  ward: String,
+  time: String,
+  status: String,
 },
 {
     toJSON: {

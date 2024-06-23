@@ -13,7 +13,12 @@ class OrderService {
 
     async CreateOrder(data) {
         const order = await this.orderRepository.CreateOrder(data);
-        return FormateData(order);
+        return order;
+    }
+
+    async GetUserOrder(data) {
+        const order = await this.orderRepository.GetUserOrder(data);
+        return order;
     }
 
     async UpdateOrder(data) {
@@ -50,6 +55,41 @@ class OrderService {
         const order = await this.orderRepository.GetOrderByStatus(data);
         return FormateData(order);
     }
+
+    async SubscribeEvents(payload){
+ 
+        payload = JSON.parse(payload);
+        const { event, data } = payload;
+        const { userId, product, qty } = data;
+        
+        switch(event){
+            case 'ADD_TO_CART':
+                this.ManageCart(userId,product, qty, false);
+                break;
+            case 'REMOVE_FROM_CART':
+                this.ManageCart(userId,product, qty, true);
+                break;
+            default:
+                break;
+        }
+    }
+ 
+        async GetOrderPayload(userId,order,event){
+
+            if(order){
+                 const payload = { 
+                    event: event,
+                    data: { userId, order }
+                };
+     
+                 return payload
+            }else{
+                return FormateData({error: 'No Order Available'});
+            }
+     
+        }
+
+
 
 }
 

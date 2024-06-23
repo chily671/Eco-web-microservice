@@ -2,7 +2,7 @@ FROM node
 
 WORKDIR /app/products
 
-COPY package.json .
+COPY package.json package-lock.json ./
 
 RUN npm install
 

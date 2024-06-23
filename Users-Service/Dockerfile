@@ -1,13 +1,14 @@
 FROM node
 
-WORKDIR /app/customer
+WORKDIR /app/user
 
-COPY package.json .
 
-RUN npm install
+COPY package.json package-lock.json ./
+
+RUN npm install 
 
 COPY . .
 
-EXPOSE 4000
+EXPOSE 5001
 
 CMD ["npm", "start"]

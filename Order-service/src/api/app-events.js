@@ -1,4 +1,4 @@
-const ShoppingService = require("../services/shopping-service");
+const OrderService = require('../services/order-service');
 
 module.exports = (app) => {
     

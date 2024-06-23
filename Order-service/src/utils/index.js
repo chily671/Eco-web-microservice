@@ -42,19 +42,22 @@ module.exports.FormatData = (data) => {
     return null;
 }
 
-//Utility function to create channel
-module.exports.CreateChannel = async() => {
+//Message Broker
+module.exports.CreateChannel = async () => {
     try {
         const connection = await amqplib.connect(MSG_QUEUE_URL);
+        console.log('amqp Connected');
         const channel = await connection.createChannel();
-        await channel.assertExchange(EXCHANGE_NAME, 'direct', { durable: false });
+        console.log('channel Created');
+        await channel.assertQueue(EXCHANGE_NAME, { durable: true });
         return channel;
-    } catch (error) {
-        console.log(error);
-        process.exit();
+    } catch (err) {
+        console.error('Failed to connect to RabbitMQ:', err.message);
+        // Cân nhắc hành động thay thế, ví dụ: sử dụng dịch vụ giả mạo hoặc tiếp tục mà không có RabbitMQ
+        global.rabbitmqConnectionFailed = true; // Đánh dấu rằng kết nối RabbitMQ đã thất bại
+        return null; // Hoặc trả về một đối tượng thay thế phù hợp
     }
-}
-
+  };
 //Utility function to publish message
 module.exports.PublishToQueue = async(channel, queueName, data) => {
     try {
@@ -77,6 +80,37 @@ module.exports.ConsumeFromQueue = async(channel, queueName, callback) => {
     } catch (error) {
         console.log(error);
         process.exit();
+    }
+}
+
+module.exports.SubscribeMessage = async (channel, service) => {
+    try {
+        if (rabbitmqConnectionFailed) {
+            console.error('RabbitMQ connection failed. Cannot subscribe to messages.');
+            return;
+        }
+
+        await channel.assertExchange(EXCHANGE_NAME, "direct", { durable: true });
+        const q = await channel.assertQueue("", { exclusive: true });
+        console.log(`Waiting for messages in queue: ${q.queue}`);
+
+        await channel.bindQueue(q.queue, EXCHANGE_NAME, USER_SERVICE);
+
+        channel.consume(
+            q.queue,
+            (msg) => {
+                if (msg.content) {
+                    console.log("The message is:", msg.content.toString());
+                    service.SubscribeEvents(msg.content.toString());
+                }
+                console.log("[X] received");
+            },
+            {
+                noAck: true,
+            }
+        );
+    } catch (error) {
+        console.error('Failed to subscribe to messages:', error);
     }
 }
 
