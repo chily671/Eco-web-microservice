@@ -1,6 +1,6 @@
 FROM node
 
-WORKDIR /app/gateway
+WORKDIR /app
 
 COPY package.json package-lock.json ./
 

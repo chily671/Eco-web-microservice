@@ -4,7 +4,6 @@ const { USER_SERVICE } = require('../config');
 const { PublishMessage } = require('../utils');
 const { application } = require("express");
 const jwt = require('jsonwebtoken');
-const user = require("../../../Users-Service/src/api/user");
 const { APP_SECRET } = require('../config');
 const uuid = require('uuid');
 

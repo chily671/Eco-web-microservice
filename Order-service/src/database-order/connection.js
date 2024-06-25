@@ -3,7 +3,9 @@ const { DB_URL } = require('../config');
 
 module.exports.databaseConnection = async() => {
     try {
-        await mongoose.connect(DB_URL);
+        await mongoose.connect(DB_URL,
+            {  tls:true }
+        );
         console.log(DB_URL);
         console.log('Db Connected');
         
