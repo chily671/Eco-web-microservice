@@ -19,6 +19,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
     "cross-env": "^7.0.3"
   }
 }

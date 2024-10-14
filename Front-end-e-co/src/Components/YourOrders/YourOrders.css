@@ -1,0 +1,134 @@
+.yourorders {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    padding: 20px;
+    position: relative;
+}
+
+.yourorders table {
+    width: 90%;
+    border-collapse: collapse;
+    border: 1px solid rgb(207,207,207);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.yourorders table tr th {
+    padding: 10px 20px;
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    background-color: rgb(246,246,246);
+    color: grey;
+}
+
+.yourorders table tr td {
+    padding: 5px 20px;
+    border: 1px solid rgb(207, 207, 207);
+    border-radius: 5px;
+    background-color: white;
+    color: grey;
+    align-items: center;
+}
+
+.yourorders table tr td button {
+    padding: 5px 20px;
+    margin: 0px;
+    font-size: 16px;
+    border: 1px solid lightgreen;
+    background-color: white;
+    color: lightgreen;
+}
+
+.yourorders table tr td button:hover {
+    background-color: lightcyan;
+}
+
+.yourorders table tr td p {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    margin-bottom: 0px;
+}
+
+.yourorders table tr td p .yellowdot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: yellow;
+}
+
+.yourorders table tr td p .reddot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.yourorders table tr td p .greendot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
+}
+
+.title-modal {
+    display: flex;
+}
+.title-modal button {
+    margin-left: auto;
+}
+/* Đặt style chung cho bảng */
+.modal-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 16px;
+  }
+  
+  /* Đặt style cho phần đầu bảng */
+  .modal-table thead {
+    background-color: #f2f2f2;
+    text-align: center;
+  }
+  
+  .modal-table th, .modal-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    text-align: center;
+  }
+  
+  /* Đặt style cho các dòng xen kẽ trong phần thân bảng */
+  .modal-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  /* Đặt style cho hình ảnh trong bảng */
+  .modal-table td img {
+    width: 50px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 4px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Đặt style cho các tiêu đề bảng */
+  .modal-table th {
+    background-color: #4CAF50;
+    color: white;
+  }
+  .modal-table .quantity-column {
+    width: 80px; /* Đặt chiều rộng mong muốn cho cột "Quantity" */
+  }
+  
+  /* Đặt style khi hover chuột lên các dòng trong bảng */
+  .modal-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  

@@ -1,0 +1,28 @@
+.User-container {
+  display: flex;
+  height: 300vh;
+  width: 100%;
+  flex-direction: column;
+}
+
+.userprofilein {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 10vh;
+  gap: 20px;
+}
+
+.userprofilein .userprofile-left {
+  width: 20%;
+  border: 1px solid rgb(207, 208, 207);
+  border-radius: 5px;
+  min-height: 100vh;
+}
+
+.userprofilein .userprofile-right {
+  width: 65%;
+  border: 1px solid rgb(207, 208, 207);
+  border-radius: 5px;
+  min-height: 100vh;
+}

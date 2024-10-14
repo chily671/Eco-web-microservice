@@ -8,7 +8,7 @@ const Popular = () => {
 const [popularProducts,setPopularProducts] = useState([]);
   
 useEffect(()=>{
-  fetch('/popularinbrands')
+  fetch('/product/popularinbrands')
   .then((response)=>response.json())
   .then((data)=>setPopularProducts(data));
 },[])
@@ -19,7 +19,7 @@ useEffect(()=>{
       <hr />
       <div className="popular-item">
         {popularProducts.map((item,i)=>{
-            return <Item key={i} id={item.id} name={item.name} image={item.image} new_price={item.price} />
+            return <Item key={i} id={item.id} name={item.name} image={item.image} price={item.price} />
         })}
       </div>
     </div>
