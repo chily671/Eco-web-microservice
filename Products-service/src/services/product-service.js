@@ -40,6 +40,16 @@ class ProductService {
     }
   }
 
+  async GetProductById(productId) {
+    try {
+      const product = await this.repository.FindById(productId);
+      return product;
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
   async GetProductPopular(brand) {
     try {
       const products = await this.repository.getProductByBrand(brand);

@@ -20,8 +20,10 @@ import AdminChatPage from "./AdminComponents/AdminChatPage/AdminChatPage";
 import AdminCheckOrder from "./AdminComponents/AdminCheckOrder/AdminCheckProduct";
 import ChatPage from "./AdminComponents/AdminChatPage/ManageChat";
 import AdminChat from "./Pages/AdminChat";
+import Checkouttest from "./Pages/Checkout";
 import { useContext } from "react";
 import { AuthenticationContext } from "./Context/AuthenticationContext";
+import SearchProductPage from "./Pages/SearchProductPage";
 function App() {
   const { isAdmin } = useContext(AuthenticationContext);
   return (
@@ -40,7 +42,9 @@ function App() {
           />
           <Route
             path="/womens"
-            element={<ShopCategory banner={women_banner} category="women" />}
+            element={
+              <SearchProductPage banner={women_banner} category="women" />
+            }
           />
           <Route
             path="/kids"
@@ -51,6 +55,7 @@ function App() {
           </Route>
           <Route path="/profile/:activepage" element={<UserProfile />} />
           <Route path="/checkout" element={<CheckoutPage />} />
+          <Route path="/checkouttest" element={<Checkouttest />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/managechat" element={<AdminChat />} />

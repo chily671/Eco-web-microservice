@@ -21,9 +21,9 @@ app.use(express.json());
 // Chuyển tiếp các yêu cầu HTTP thông thường qua proxy
 app.use("/user", proxy("http://localhost:5001"));
 app.use("/order", proxy("http://localhost:5002"));
-app.use("/product", proxy("http://localhost:5000"));
+app.use("/product", proxy("http://localhost:5000", { parseReqBody: false }));
 app.use("/chat", proxy("http://localhost:5008")); // Chuyển tiếp các yêu cầu HTTP cho chat
-
+app.use("/pay", proxy("http://localhost:5009")); // Chuyển tiếp các yêu cầu HTTP cho api
 // Chuyển tiếp các yêu cầu HTTP thông thường
 app.use("/chat", (req, res) => {
   wsProxy.web(req, res); // Chuyển tiếp yêu cầu HTTP đến backend

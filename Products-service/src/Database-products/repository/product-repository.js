@@ -78,6 +78,15 @@ class ProductRepository {
     }
   }
 
+  async FindById(productId) {
+    try {
+      const product = await ProductModel.findById(productId);
+      return product;
+    } catch (error) {
+      return error;
+    }
+  }
+
   async getProductById(id) {
     try {
       const product = await ProductModel.findById(id);

@@ -5,9 +5,9 @@ const UserAuth = require("./middlewares/auth");
 const { USER_SERVICE } = require("../config");
 const jwt = require("jsonwebtoken");
 const uuid = require("uuid");
-const path = require("path");
 const multer = require("multer");
-
+const path = require("path");
+const fs = require("fs");
 // UID Generation
 function generateID() {
   return uuid.v4();
@@ -37,10 +37,7 @@ module.exports = async (app, channel) => {
   const storage = multer.diskStorage({
     destination: "./upload/images/",
     filename: (req, file, cb) => {
-      cb(
-        null,
-        file.fieldname + "_" + Date.now() + path.extname(file.originalname)
-      );
+      cb(null, file.name + "_" + Date.now() + path.extname(file.originalname));
     },
   });
 
@@ -56,6 +53,17 @@ module.exports = async (app, channel) => {
       success: 1,
       image_url: `/product/images/${req.file.filename}`,
     });
+  });
+
+  app.get("/product/:id", async (req, res) => {
+    const { id } = req.params;
+    try {
+      const { data } = await service.GetProductById(id);
+      return res.json(data);
+    } catch (error) {
+      console.error("Error getting product by id:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
   });
 
   app.post("/addproduct", async (req, res) => {
@@ -115,6 +123,111 @@ module.exports = async (app, channel) => {
     } catch (error) {
       console.error("Error in GET /products:", error);
       return res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
+
+  // Cấu hình Multer
+  const imageSearchStorage = multer.diskStorage({
+    destination: "./upload/imageSearch/",
+    filename: (req, file, cb) => {
+      cb(
+        null,
+        file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+      );
+    },
+  });
+
+  const imageSearchUpload = multer({
+    storage: imageSearchStorage,
+    limits: { fileSize: 5 * 1024 * 1024 }, // Giới hạn dung lượng file ảnh
+  });
+
+  // Creating Upload Endpoint for imageSearch
+  app.use("/imagesearchstorage", express.static("upload/imageSearch"));
+  //       let imageSearchformData = new FormData();
+  //       console.log("formdata created");
+
+  //       console.log("req.file:" + req.file);
+
+  //       const fileStream = fs.createReadStream(req.file.path);
+  //       imageSearchformData.append(
+  //         "query_img",
+  //         fileStream,
+  //         req.file.originalname
+  //       ); // Thêm tệp vào FormData
+
+  //       console.log("File uploaded successfully:", req.file);
+  //       // imageSearchformData.append("query_img", req.file.filename);
+
+  //       // // Gửi formData đến URL khác
+  //       // const response = await fetch("http://localhost:1234/imagesearch", {
+  //       //   method: "POST",
+  //       //   body: imageSearchformData,
+  //       // });
+
+  //       // // Đọc và trả về phản hồi từ URL khác
+  //       // res.json(await response.json());
+
+  //       res.json({ message: "Image uploaded" });
+  //     } catch (err) {
+  //       console.log(req.file);
+  //       console.error(err);
+  //       res.status(500).send("Internal Server Error");
+  //     }
+  //   }
+  // );
+
+  app.post(
+    "/imagesearch",
+    (req, res, next) => {
+      imageSearchUpload.single("query_img")(req, res, (err) => {
+        if (err) {
+          console.error("Multer error:", err);
+          return res.status(400).json({ error: err.message });
+        }
+        next(); // Tiếp tục nếu không có lỗi
+      });
+    },
+    async (req, res) => {
+      try {
+        if (!req.file) {
+          return res.status(400).json({ error: "No image was uploaded." });
+        }
+        console.log("File uploaded successfully:", req.file);
+        let imageSearchformData = new FormData();
+        // imageSearchformData.append("query_img", req.file.filename);
+        imageSearchformData.append("query_img", req.file.filename);
+        console.log(imageSearchformData);
+        // Gửi formData đến URL khác
+        const response = await fetch("http://localhost:1234/imagesearch", {
+          method: "POST",
+          body: imageSearchformData,
+        }).catch((error) => console.error("Error:", error));
+        console.log("Response imagesearch:", response);
+        res.json(await response.json());
+      } catch (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+      }
+    }
+  );
+
+  // Midlleware for reatrain model
+  app.post("/retrain", async (req, res) => {
+    try {
+      // Tao formData moi de gui den URL khac
+      let formData = new FormData();
+      console.log(req.body.image_filename);
+      formData.append("image_filename", req.body.image_filename);
+      // Gui formData den URL khac
+      const response = await fetch("http://localhost:1234/retrain", {
+        method: "POST",
+        body: formData,
+      });
+      res.json(await response.json());
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
     }
   });
 

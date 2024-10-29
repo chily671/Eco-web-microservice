@@ -117,6 +117,7 @@ const ShopContextProvider = (props) => {
         }
       }
     }
+    setTotalCartAmount(totalAmout);
     return totalAmout;
   };
 

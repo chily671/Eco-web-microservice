@@ -1,17 +1,19 @@
 import React, { useState, useContext } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { ShopContext } from "../../Context/ShopContext";
+const serverURL = "http://localhost:5009";
 
-const serverURL = "http://localhost:4000"
 // Renders errors or successfull transactions on the screen.
 function Message({ content }) {
   return <p>{content}</p>;
 }
 
-function PayPalment() {
-  const {getQuantityItem, getIdItem} = useContext(ShopContext);
+function PayPalment(props) {
+  const { ordercurrent } = props;
+  console.log({ ordercurrent });
   const initialOptions = {
-    "client-id": "AQB4nqI-T6EZUicX8m-mfRWeJjP0u1_ISZujF9zFFKRgQUof30s1cdNrmXBNtH5ErDM-KmrJWJTS53GI",
+    "client-id":
+      "AYQ_XBnAGfXPBw43yGEDl_XJJqENJXsKPcSbM6lyVqowKMLlhQFei5XP1zUdnug5YwXxA-NZ9lvzZT42",
     "enable-funding": "card",
     "disable-funding": "paylater,venmo",
     "data-sdk-integration-source": "integrationbuilder_sc",
@@ -30,19 +32,15 @@ function PayPalment() {
           createOrder={async () => {
             try {
               const response = await fetch(`${serverURL}/api/orders`, {
-                method: "POST", mode:'cors',
+                method: "POST",
+                mode: "cors",
                 headers: {
                   "Content-Type": "application/json",
                 },
                 // use the "body" param to optionally pass additional order information
                 // like product ids and quantities
                 body: JSON.stringify({
-                  cart: [
-                    {
-                      "id":  getIdItem(),
-                      "quantity": getQuantityItem(),
-                    },
-                  ],
+                  ordercurrent,
                 }),
               });
 
@@ -72,7 +70,7 @@ function PayPalment() {
                   headers: {
                     "Content-Type": "application/json",
                   },
-                },
+                }
               );
 
               const orderData = await response.json();
@@ -90,7 +88,7 @@ function PayPalment() {
               } else if (errorDetail) {
                 // (2) Other non-recoverable errors -> Show a failure message
                 throw new Error(
-                  `${errorDetail.description} (${orderData.debug_id})`,
+                  `${errorDetail.description} (${orderData.debug_id})`
                 );
               } else {
                 // (3) Successful transaction -> Show confirmation or thank you message
@@ -98,18 +96,18 @@ function PayPalment() {
                 const transaction =
                   orderData.purchase_units[0].payments.captures[0];
                 setMessage(
-                  `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`,
+                  `Transaction ${transaction.status}: ${transaction.id}. See console for all available details`
                 );
                 console.log(
                   "Capture result",
                   orderData,
-                  JSON.stringify(orderData, null, 2),
+                  JSON.stringify(orderData, null, 2)
                 );
               }
             } catch (error) {
               console.error(error);
               setMessage(
-                `Sorry, your transaction could not be processed...${error}`,
+                `Sorry, your transaction could not be processed...${error}`
               );
             }
           }}
