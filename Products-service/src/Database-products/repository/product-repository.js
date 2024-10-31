@@ -80,7 +80,9 @@ class ProductRepository {
 
   async FindById(productId) {
     try {
-      const product = await ProductModel.findById(productId);
+      console.log("productId on repository:", productId);
+      const product = await ProductModel.findOne({ id: productId });
+      console.log("product on repository:", product)
       return product;
     } catch (error) {
       return error;

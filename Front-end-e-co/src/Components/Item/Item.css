@@ -1,18 +1,21 @@
 .item{
     width: 280px;
+    height: 600px;
 }
 .item img{
     width: 280px;
+    height: 280px;
 }
 .item p{
     margin: 3px 0px;
+    color: aliceblue;
 }
 .item-prices{
     display: flex;
     gap: 20px;
 }
 .item-price-new{
-    color: #374151;
+    color: #d2d8e1;
     font-size: 18px;
     font-weight: 600;
 }

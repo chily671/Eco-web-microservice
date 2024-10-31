@@ -4,7 +4,10 @@ const {
   PAYPAL_CLIENT_ID,
   PAYPAL_CLIENT_SECRET,
   PAYPAL_API,
+  STRIPE_SECRET_KEY
 } = require("../config");
+
+const stripe = require("stripe")(STRIPE_SECRET_KEY);
 module.exports = async (app, channel) => {
   /**
    * Generate an OAuth 2.0 access token for authenticating with PayPal REST APIs.
@@ -141,6 +144,46 @@ module.exports = async (app, channel) => {
       res.status(500).json({ error: "Failed to capture order." });
     }
   });
+
+  // Stripe
+  app.post("/create-checkout-session", async (req, res) => {
+    const {order} = req.body;
+    console.log("order" + order);
+    const productsID = Object.keys(order.products);
+    console.log("productsID: " + productsID);
+    const cartItem = await fetch(`http://localhost:5000/product/${productsID}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((response) => response.json());
+    const product = cartItem;
+    console.log(product);
+    const imageUrl = `http://localhost:5000${product.image.replace('product/', '')}`;
+    const lineItems = [{
+      price_data: {
+        currency: "usd",
+        product_data: {
+          name: product.name,
+          images: [imageUrl],
+        },
+        unit_amount: Math.round(product.price),
+      },
+      quantity: order.products[product.id],
+  }]
+
+  console.log( lineItems);
+  
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: lineItems,
+      mode: "payment",
+      success_url: `http://localhost:3000/success`,
+      cancel_url: `http://localhost:3000`,
+    });
+
+    res.json({ id: session.id });
+});
 
   // serve index.html
   app.get("/", (req, res) => {

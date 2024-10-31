@@ -4,6 +4,7 @@ import VietnamData from "./ProvinceList";
 import { ShopContext } from "../../Context/ShopContext";
 import CartItemUnit from "../CartItems/CartItemUnit";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import {loadStripe} from '@stripe/stripe-js';
 const serverURL = "http://localhost:5009";
 
 const CheckoutPage = () => {
@@ -59,6 +60,31 @@ const CheckoutPage = () => {
     window.location.replace("/");
   };
 
+  const makeStripePayment = async () => {
+    const stripe = await loadStripe("pk_test_51QFV1OJu8ujkgWdNvelfz6p2KW3aP9zkLEe27fCuzvtfoWjUscrHK1RJOn52NZC8fQxl8zo1ZNZXiJUhF67umCl800HyCc5ZVl")
+    const body = {
+      order: orderDetail,}
+      console.log(body)
+  
+
+  const headers = {
+    "Content-Type": "application/json",
+  }
+
+  const response = await fetch(`/pay/create-checkout-session`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(body),
+  })
+  const session = await response.json()
+
+  const result = await stripe.redirectToCheckout({
+    sessionId: session.id,
+  })
+  if (result.error) {
+    console.log(result.error)
+  }
+}
   useEffect(() => {
     setOrderDetail({ ...orderDetail, total: totalCartAmount });
   }, [totalCartAmount]);
@@ -223,6 +249,10 @@ const CheckoutPage = () => {
         >
           Complete Order
         </button>
+
+        <button onClick={() => {makeStripePayment()}}
+        >Pay with Stripe </button>
+        
         <PayPalScriptProvider options={initialOptions}>
           <PayPalButtons
             style={{

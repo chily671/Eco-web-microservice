@@ -57,8 +57,10 @@ module.exports = async (app, channel) => {
 
   app.get("/product/:id", async (req, res) => {
     const { id } = req.params;
+    console.log("id: " + id);
     try {
-      const { data } = await service.GetProductById(id);
+      const  data  = await service.GetProductById(id);
+      console.log("data: " + data);
       return res.json(data);
     } catch (error) {
       console.error("Error getting product by id:", error);

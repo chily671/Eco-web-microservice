@@ -22,6 +22,7 @@ import ChatPage from "./AdminComponents/AdminChatPage/ManageChat";
 import AdminChat from "./Pages/AdminChat";
 import Checkouttest from "./Pages/Checkout";
 import { useContext } from "react";
+import Stripe from "./Components/StripePayMent/StripePayMent";
 import { AuthenticationContext } from "./Context/AuthenticationContext";
 import SearchProductPage from "./Pages/SearchProductPage";
 function App() {
@@ -59,6 +60,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<LoginSignup />} />
           <Route path="/managechat" element={<AdminChat />} />
+          <Route path="/success" element={<Stripe />} />
+          
         </Routes>
         {isAdmin ? null : <Footer />}
       </BrowserRouter>
