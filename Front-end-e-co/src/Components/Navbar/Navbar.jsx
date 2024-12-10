@@ -11,7 +11,7 @@ import { FaRegMessage } from "react-icons/fa6";
 import { AuthenticationContext } from "../../Context/AuthenticationContext";
 
 const Navbar = () => {
-  const [menu, setMenu] = useState("shop");
+  const [menu, setMenu] = useState("home");
   const { getTotalCartItems } = useContext(ShopContext);
   const { isAdmin } = useContext(AuthenticationContext);
   const menuRef = useRef();
@@ -23,10 +23,12 @@ const Navbar = () => {
 
   return (
     <div className="navbar">
+    <Link to="/">
       <div className="nav-logo">
         <img src={logo} alt="" />
         <p>Watch Shop</p>
       </div>
+      </Link>
       <img
         className="nav-dropdown"
         onClick={dropdown_toggle}
@@ -34,50 +36,31 @@ const Navbar = () => {
         alt=""
       />
       <ul ref={menuRef} className="nav-menu">
+      <li
+          onClick={() => {
+            setMenu("home");
+          }}
+        >
+          <Link style={{ textDecoration: "none" }} to="/">
+            Home
+          </Link>
+          {menu === "home" ? <hr /> : <></>}
+        </li>
         <li
           onClick={() => {
             setMenu("shop");
           }}
         >
-          <Link style={{ textDecoration: "none" }} to="/">
+          <Link style={{ textDecoration: "none" }} to="/shop">
             Shop
           </Link>
           {menu === "shop" ? <hr /> : <></>}
         </li>
-        <li
-          onClick={() => {
-            setMenu("mens");
-          }}
-        >
-          <Link style={{ textDecoration: "none" }} to="/mens">
-            Men
-          </Link>
-          {menu === "mens" ? <hr /> : <></>}
-        </li>
-        <li
-          onClick={() => {
-            setMenu("womens");
-          }}
-        >
-          <Link style={{ textDecoration: "none" }} to="/womens">
-            Women
-          </Link>
-          {menu === "womens" ? <hr /> : <></>}
-        </li>
-        <li
-          onClick={() => {
-            setMenu("kids");
-          }}
-        >
-          <Link style={{ textDecoration: "none" }} to="/kids">
-            Kids
-          </Link>
-          {menu === "kids" ? <hr /> : <></>}
-        </li>
+        
       </ul>
-      <div className="nav-search">
+      {/* <div className="nav-search">
         <Search />
-      </div>
+      </div> */}
       <div className="nav-login-cart">
         {localStorage.getItem("auth-token") ? (
           <button
@@ -89,7 +72,7 @@ const Navbar = () => {
             Logout
           </button>
         ) : (
-          <Link to="/login">
+          <Link to="/loginup">
             <button>Login</button>
           </Link>
         )}
@@ -97,6 +80,7 @@ const Navbar = () => {
         <Link to="/cart">
           <img src={cart_icon} alt="" />
         </Link>
+        <div className="nav-cart-count">{getTotalCartItems()}</div>
         {isAdmin ? (
           <Link to="/managechat">
             <FaRegMessage size={24} />
@@ -107,7 +91,6 @@ const Navbar = () => {
             <img src={user_icon} alt="" className="user_icon" />
           </Link>
         ) : null}
-        <div className="nav-cart-count">{getTotalCartItems()}</div>
       </div>
     </div>
   );

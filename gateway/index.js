@@ -18,6 +18,7 @@ const wsProxy = httpProxy.createProxyServer({
 app.use(cors());
 app.use(express.json());
 
+
 // Chuyển tiếp các yêu cầu HTTP thông thường qua proxy
 app.use("/user", proxy("http://localhost:5001"));
 app.use("/order", proxy("http://localhost:5002"));

@@ -25,32 +25,24 @@ import { useContext } from "react";
 import Stripe from "./Components/StripePayMent/StripePayMent";
 import { AuthenticationContext } from "./Context/AuthenticationContext";
 import SearchProductPage from "./Pages/SearchProductPage";
+import Order from "./AdminComponents/AdminCheckOrder/Order";
+import AdminNavbar from "./AdminComponents/AdminNavbar/Navbar";
+import Shopping from "./Components/Shopping/Shopping";
 function App() {
   const { isAdmin } = useContext(AuthenticationContext);
   return (
     <div>
       <BrowserRouter>
-        <Navbar />
+        {isAdmin ? <AdminNavbar /> : <Navbar />}
+
         <Routes>
           <Route path="/addproduct" element={<AdminAddProduct />} />
           <Route path="/listproduct" element={<AdminListProduct />} />
           <Route path="/adminchatpage" element={<AdminChatPage />} />
           <Route path="/admincheckorder" element={<AdminCheckOrder />} />
+          <Route path="/order" element={<Order />} />
           <Route path="/" element={<Shop />} />
-          <Route
-            path="/mens"
-            element={<ShopCategory banner={men_banner} category="men" />}
-          />
-          <Route
-            path="/womens"
-            element={
-              <SearchProductPage banner={women_banner} category="women" />
-            }
-          />
-          <Route
-            path="/kids"
-            element={<ShopCategory banner={kids_banner} category="kid" />}
-          />
+          <Route path="/shop" element={<Shopping />} />
           <Route path="/products">
             <Route path=":productId" element={<Product />} />
           </Route>
@@ -58,10 +50,10 @@ function App() {
           <Route path="/checkout" element={<CheckoutPage />} />
           <Route path="/checkouttest" element={<Checkouttest />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/login" element={<LoginSignup />} />
+          <Route path="/loginup" element={<LoginSignup />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/managechat" element={<AdminChat />} />
           <Route path="/success" element={<Stripe />} />
-          
         </Routes>
         {isAdmin ? null : <Footer />}
       </BrowserRouter>

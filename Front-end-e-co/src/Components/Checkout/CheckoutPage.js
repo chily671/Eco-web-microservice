@@ -55,47 +55,12 @@ const CheckoutPage = () => {
     }
   };
 
+  
+
   const OrderSuccess = () => {
     alert("Order successfully");
     window.location.replace("/");
   };
-
-  const makeStripePayment = async () => {
-    const stripe = await loadStripe("pk_test_51QFV1OJu8ujkgWdNvelfz6p2KW3aP9zkLEe27fCuzvtfoWjUscrHK1RJOn52NZC8fQxl8zo1ZNZXiJUhF67umCl800HyCc5ZVl")
-    const body = {
-      order: orderDetail,}
-      console.log(body)
-  
-
-  const headers = {
-    "Content-Type": "application/json",
-  }
-
-  const response = await fetch(`/pay/create-checkout-session`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(body),
-  })
-  const session = await response.json()
-
-  const result = await stripe.redirectToCheckout({
-    sessionId: session.id,
-  })
-  if (result.error) {
-    console.log(result.error)
-  }
-}
-  useEffect(() => {
-    setOrderDetail({ ...orderDetail, total: totalCartAmount });
-  }, [totalCartAmount]);
-
-  useEffect(() => {
-    setOrderDetail({ ...orderDetail, products: cartItems });
-  }, [cartItems]);
-
-  useEffect(() => {
-    console.log(orderDetail);
-  }, [orderDetail]);
 
   const AddOrder = async () => {
     // Alert if no product in cart
@@ -143,6 +108,48 @@ const CheckoutPage = () => {
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
   };
+
+  const makeStripePayment = async () => {
+    const stripe = await loadStripe("pk_test_51QFV1OJu8ujkgWdNvelfz6p2KW3aP9zkLEe27fCuzvtfoWjUscrHK1RJOn52NZC8fQxl8zo1ZNZXiJUhF67umCl800HyCc5ZVl")
+    const body = {
+      order: orderDetail,}
+      console.log(body)
+  
+
+  const headers = {
+    "Content-Type": "application/json",
+    "auth-token": `${localStorage.getItem("auth-token")}`,
+  }
+
+  const session = await fetch(`/pay/create-checkout-session`, {
+    method: "POST",
+    headers: headers,
+    body: JSON.stringify(body),
+  }).then((response) => response.json())
+
+  const result = await stripe.redirectToCheckout({
+    sessionId: session.id,
+  })
+  if (result.error) {
+    console.log(result.error)
+  } else {
+    console.log("success")
+    AddOrder()
+  }
+  
+}
+  useEffect(() => {
+    setOrderDetail({ ...orderDetail, total: totalCartAmount });
+  }, [totalCartAmount]);
+
+  useEffect(() => {
+    setOrderDetail({ ...orderDetail, products: cartItems });
+  }, [cartItems]);
+
+  useEffect(() => {
+    console.log(orderDetail);
+  }, [orderDetail]);
+
 
   return (
     <div className="checkout">
@@ -271,7 +278,7 @@ const CheckoutPage = () => {
                   },
                   // use the "body" param to optionally pass additional order information
                   // like product ids and quantities
-                  body: ordercurrent,
+                  body: JSON.stringify(ordercurrent),
                 });
 
                 const orderData = await response.json();
@@ -333,6 +340,7 @@ const CheckoutPage = () => {
                     orderData,
                     JSON.stringify(orderData, null, 2)
                   );
+                  AddOrder();
                 }
               } catch (error) {
                 console.error(error);

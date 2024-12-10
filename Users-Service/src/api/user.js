@@ -76,6 +76,14 @@ module.exports = async (app, channel) => {
         return res.status(400).json({ message: "Missing required fields" });
       }
       const user = await service.Register({ username, email, password });
+      await fetch("http://localhost:1357/loaddata", {
+        method: "POST",
+        body: JSON.stringify({ email: email }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("User Created");
       console.log(user);
       return res.status(200).json(user);
     } catch (error) {
@@ -169,6 +177,27 @@ module.exports = async (app, channel) => {
       return res.status(200).json(cart);
     } catch (error) {
       return res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.post("/updateInteraction", fetchUser, async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const productId = req.body.itemId;
+      const interaction = req.body.action;
+
+      if (!productId || !interaction) {
+        return res.status(400).json({ message: "Invalid request body" });
+      }
+
+      const updated = await service.UpdateInteraction(
+        userId,
+        productId,
+        interaction
+      );
+      return res.status(200).json(updated);
+    } catch (error) {
+      return res.status(404).json({ message: error.message });
     }
   });
 

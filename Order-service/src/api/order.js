@@ -60,34 +60,29 @@ module.exports = (app, channel) => {
   // Creating Creat Order Endpoint
   app.post("/order", fetchUser, async (req, res) => {
     try {
-      // const response = await fetch ('http://localhost:5001/user',
-      //     {
-      //         method: 'POST',
-      //         headers: {
-      //             'auth-token': req.header('auth-token'),
-      //             'Content-Type': 'application/json',
-      //             application: 'application/json'
-      //         },
-
-      //     }
-      // )
-
       const UserId = req.user.id;
       console.log("data:", req.body);
+      if (!req.body.status) {
       const order = await service.CreateOrder({
         id: generateID(),
         userId: UserId,
         ...req.body,
         status: "pending",
       });
+    } else {
+      const order = await service.CreateOrder({
+        id: generateID(),
+        userId: UserId,
+        ...req.body,
+      });
       console.log("order:", order);
       return res
         .status(200)
         .json({ message: "Order Created", order, success: true });
-    } catch (error) {
+    }} catch (error) {
       return res.status(400).json({ message: error.message });
     }
-  });
+});
 
   // Creating Get Order Endpoint
   app.get("/order", fetchUser, async (req, res) => {

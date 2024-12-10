@@ -6,8 +6,6 @@ class UserRepository {
     try {
       let cart = {};
       let order = [];
-      cart["0"] = 0;
-      order.push("0");
       const newUser = new UserModel({
         username,
         email,
@@ -91,6 +89,67 @@ class UserRepository {
       return error;
     }
   }
+
+  async UpdateInteraction(userId, productId, interaction) {
+    try {
+      const user = await UserModel.findById(userId);
+  
+      if (!user) {
+        throw new Error("User not found");
+      }
+  
+      if (!user.interactionHistory) {
+        user.interactionHistory = new Map();
+      }
+  
+      // Kiểm tra và khởi tạo dữ liệu cho productId
+      if (!user.interactionHistory.has(productId)) {
+        user.interactionHistory.set(productId, {
+          quantity: 0,
+          likes: 0,
+          views: 0,
+          purchases: 0,
+        });
+      }
+  
+      // Lấy dữ liệu hiện tại
+      const productData = user.interactionHistory.get(productId);
+  
+      // Cập nhật dữ liệu dựa trên hành động
+      switch (interaction) {
+        case "addToCart":
+          productData.quantity += 1;
+          break;
+        case "removeFromCart":
+          productData.quantity = Math.max(0, productData.quantity - 1);
+          break;
+        case "likes":
+          productData.likes += 1;
+          break;
+        case "views":
+          productData.views += 1;
+          break;
+        case "purchases":
+          productData.purchases += 1;
+          break;
+        default:
+          throw new Error("Invalid interaction type");
+      }
+  
+      // Ghi dữ liệu đã cập nhật
+      user.interactionHistory.set(productId, productData);
+  
+      // Đánh dấu đã thay đổi và lưu
+      user.markModified('interactionHistory');
+      await user.save();
+  
+      return { success: true, message: "Interaction Updated", cart: Array.from(user.interactionHistory.entries()) };
+    } catch (error) {
+      console.error("Error updating interaction:", error);
+      return { success: false, message: error.message };
+    }
+  }
+  
 
   async clearCart(userId) {
     try {

@@ -108,6 +108,23 @@ class UserService {
     }
   }
 
+  async UpdateInteraction(userId, productId, interaction) {
+    try {
+      console.log("User ID in service:", userId);
+      console.log("Product ID in service:", productId);
+      console.log("Interaction in service:", interaction);
+      const interactionData = await this.repository.UpdateInteraction(
+        userId,
+        productId,
+        interaction
+      );
+      return interactionData;
+    } catch (error) {
+      console.log(error);
+      return { success: false, message: "Internal Server Error" };
+    }
+  }
+
   async ClearCart(userId) {
     try {
       const cart = await this.repository.clearCart(userId);

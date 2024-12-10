@@ -20,6 +20,15 @@ class ProductService {
     }
   }
 
+  async EditProduct(productInputs) {
+    try {
+      const productResult = await this.repository.editProduct(productInputs);
+      return FormateData(productResult);
+    } catch (error) {
+      throw new Error("Unable to edit product");
+    }
+  }
+
   async GetAllProducts() {
     try {
       const products = await this.repository.getProducts();
@@ -40,10 +49,49 @@ class ProductService {
     }
   }
 
+  async GetRecommendedProducts(data) {
+    try {
+      for (let i = 0; i < data.length; i++) {
+        console.log(data[i]);
+        const product = await this.repository.FindById(data[i]);
+        data[i] = product;
+      }
+      return data;
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  async GetProductByIdForPayMent(productId) {
+    try {
+      for (let i = 0; i < data.length; i++) {
+        console.log(data[i]);
+        const product = await this.repository.FindById(data[i]);
+        data[i] = product;
+      }
+      return data;
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+
   async GetProductById(productId) {
     try {
       const product = await this.repository.FindById(productId);
       return product;
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  async RateProduct(productId, rating) {
+    try {
+      const updatedProduct = await this.repository.rateProduct(productId, rating);
+      return updatedProduct;
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: "Internal Server Error" });

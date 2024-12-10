@@ -39,6 +39,18 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    rating: { 
+        type: Number,
+        default: 0 
+    },
+    revwes: {
+        type: Object,
+        default: {Text:"No Reviews"}
+    },
+    poppuarity: {
+        type: Number,
+        default: 0,
+    },
     date: {
         type: Date,
         default: Date.now,

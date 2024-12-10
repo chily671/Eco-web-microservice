@@ -68,6 +68,46 @@ module.exports = async (app, channel) => {
     }
   });
 
+  app.post("/product/:id", async (req, res) => {
+    const { id } = req.params;
+    console.log("id: " + id);
+    try {
+      const  data  = await service.GetProductById(id);
+      console.log("data: " + data);
+      return res.json(data);
+    } catch (error) {
+      console.error("Error getting product by id:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  });
+
+  // Creating endpoint for getting product for payment
+  app.get("/productforpayment", async (req, res) => {
+    const { id } = req.body;
+    console.log("id: " + id);
+    try {
+      const  data  = await service.GetProductByIdForPayMent(id);
+      console.log("data: " + data);
+      return res.json(data);
+    } catch (error) {
+      console.error("Error getting product by id:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  });
+
+
+  // Creating endpoint for rating product
+  app.post("/rateproduct", async (req, res) => {
+    const { productId, rating } = req.body;
+    try {
+      const { data } = await service.RateProduct(productId, rating);
+      return res.json(data);
+    } catch (error) {
+      console.error("Error rating product:", error);
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  });
+
   app.post("/addproduct", async (req, res) => {
     const { name, image, brand, model, price, sex, size, year, available } =
       req.body;
@@ -102,6 +142,25 @@ module.exports = async (app, channel) => {
       return res.json(data);
     } catch (error) {
       console.error("Error creating product:", error); // Logging lỗi
+      return res.status(500).json({ message: "Internal Server Error" });
+    }
+  });
+
+  // Creating endpoint for editing product
+  app.put("/editproduct", async (req, res) => {
+    const { productId, name, image, brand, model, price } = req.body; 
+    try {
+      const { data } = await service.EditProduct({
+        productId,
+        name,
+        image,
+        brand,
+        model,
+        price,
+      });
+      return res.json(data);
+    } catch (error) {
+      console.error("Error editing product:", error);
       return res.status(500).json({ message: "Internal Server Error" });
     }
   });
@@ -230,6 +289,26 @@ module.exports = async (app, channel) => {
     } catch (err) {
       console.error(err);
       res.status(500).send("Internal Server Error");
+    }
+  });
+
+  //creating endpoint for getting recommended products
+  app.get("/recommended",fetchUser, async (req, res, next) => {
+    try {
+      let userID = req.user.id;
+      console.log(userID);
+      const response = await fetch("http://localhost:1357/recommend", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: userID}),
+      }).then((response) => response.json());
+      const recommendedProducts = await service.GetRecommendedProducts(response);
+      return res.status(200).json(recommendedProducts);
+    } catch (error) {
+      console.error("Error in GET /recommended:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   });
 

@@ -13,7 +13,7 @@ import iconImageSearch from "../Assets/lens.png";
 const HomePage = (props) => {
   const [search, setSearch] = useState("");
 
-  const { all_product } = useContext(ShopContext);
+  const { all_product, updateInteraction } = useContext(ShopContext);
 
   const [image, setImage] = useState(null);
 
@@ -161,6 +161,7 @@ const HomePage = (props) => {
           if (product) {
             return (
               <Item
+                onclick={() => updateInteraction(product.id, "views")}
                 key={i}
                 id={product.id}
                 name={product.name}

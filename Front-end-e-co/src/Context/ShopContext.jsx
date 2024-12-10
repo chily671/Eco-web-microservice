@@ -11,6 +11,8 @@ const ShopContextProvider = (props) => {
   const [totalCartAmount, setTotalCartAmount] = useState(0);
   const [orderList, setOrderList] = useState([]);
   const [User, setUser] = useState([]);
+  const [recommend, setRecommend] = useState([]);
+  const [interaction, setInteraction] = useState({});
 
   useEffect(() => {
     fetch("/product/allproduct")
@@ -52,6 +54,17 @@ const ShopContextProvider = (props) => {
         .then((response) => response.json())
         .then((data) => setOrderList(data))
         .then((data) => console.log(data));
+
+      fetch("/product/recommended", {
+        headers: {
+          Accept: "application/form-data",
+          "auth-token": `${localStorage.getItem("auth-token")}`,
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setRecommend(data))
+        .then((data) => console.log(data));
     }
   }, []);
 
@@ -84,27 +97,34 @@ const ShopContextProvider = (props) => {
     }
   };
 
+  const updateInteraction = (itemId, interaction) => {
+    setInteraction(interaction);
+    // Nếu người dùng đã đăng nhập, gửi thông tin lên backend
+    if (localStorage.getItem("auth-token")) {
+      fetch("/user/updateInteraction", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "auth-token": `${localStorage.getItem("auth-token")}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          itemId: itemId,
+          action: interaction,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log("Interaction updated:", data))
+        .catch((error) => console.error("Error updating interaction:", error));
+    } else {
+      console.log("User is not authenticated.");
+    }
+  };
+
   const increaseQuantity = () => {};
 
   const decreaseQuantity = () => {
     setCartItems((prev) => ({ ...prev, quantity: prev.quantity - 1 }));
-  };
-
-  const removeFromCart = (itemId) => {
-    setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] - 1 }));
-    if (localStorage.getItem("auth-token")) {
-      fetch("/removefromcart", {
-        method: "POST",
-        headers: {
-          Accept: "application/form-data",
-          "auth-token": `${localStorage.getItem("auth-token")}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ itemId: itemId }),
-      })
-        .then((response) => response.json())
-        .then((data) => console.log(data));
-    }
   };
 
   const getTotalCartAmount = () => {
@@ -144,14 +164,16 @@ const ShopContextProvider = (props) => {
     getTotalCartAmount,
     all_product,
     cartItems,
-    addToCart,
+    updateInteraction,
+    interaction,
     increaseQuantity,
     decreaseQuantity,
-    removeFromCart,
     totalCartAmount,
     orderList,
     getTotalOrderItems,
     User,
+    recommend,
+    addToCart
   };
   return (
     <ShopContext.Provider value={contextValue}>

@@ -122,7 +122,7 @@ module.exports = async (app, channel) => {
   app.post(`/api/orders`, async (req, res) => {
     try {
       // use the cart information passed from the front-end to calculate the order amount detals
-      console.log(req.body);
+      console.log( "nono: " +req.body);
       const { jsonResponse, httpStatusCode } = await createOrder(req.body);
       res.status(httpStatusCode).json(jsonResponse);
       console.log(jsonResponse);
@@ -148,32 +148,49 @@ module.exports = async (app, channel) => {
   // Stripe
   app.post("/create-checkout-session", async (req, res) => {
     const {order} = req.body;
-    console.log("order" + order);
+    console.log(order);
     const productsID = Object.keys(order.products);
     console.log("productsID: " + productsID);
+    for (const prodcutID of productsID) {
     const cartItem = await fetch(`http://localhost:5000/product/${productsID}`, {
-      method: "GET",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
     }).then((response) => response.json());
+    console.log(cartItem);
     const product = cartItem;
     console.log(product);
     const imageUrl = `http://localhost:5000${product.image.replace('product/', '')}`;
     const lineItems = [{
       price_data: {
         currency: "usd",
-        product_data: {
+        product_data: [{
           name: product.name,
           images: [imageUrl],
-        },
+        }],
         unit_amount: Math.round(product.price),
       },
       quantity: order.products[product.id],
-  }]
-
-  console.log( lineItems);
+  }];
   
+
+  console.log(lineItems);
+  const AddOrder = await fetch(`http://localhost:5002/order`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "auth-token": req.headers["auth-token"],
+    },
+    body: JSON.stringify({
+      status: "pending",
+      products: order.products,
+      total: order.total,
+    }),
+  }).then((response) => response.json());
+  console.log(AddOrder);
+
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       line_items: lineItems,
@@ -182,7 +199,10 @@ module.exports = async (app, channel) => {
       cancel_url: `http://localhost:3000`,
     });
 
+    console.log(session);
+
     res.json({ id: session.id });
+  }
 });
 
   // serve index.html

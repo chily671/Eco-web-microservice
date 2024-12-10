@@ -18,6 +18,19 @@ const UserSchema = new mongoose.Schema({
   orderData: {
     type: Array,
   },
+  viewdProducts: {
+    type: Array,
+  },
+  interactionHistory: {
+    type: Map,
+    of: {
+      quantity: { type: Number, default: 0 },
+      likes: { type: Number, default: 0 },
+      views: { type: Number, default: 0 },
+      purchases: { type: Number, default: 0 },
+    },
+    default: {},
+  },
   date: {
     type: Date,
     default: Date.now,

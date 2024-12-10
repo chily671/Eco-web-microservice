@@ -2,9 +2,10 @@ import React from "react";
 import Item from "../Item/Item";
 import "./NewCollections.css";
 import { useState } from "react";
-import { useEffect } from "react";
-
+import { useEffect, useContext } from "react";
+import { ShopContext } from "../../Context/ShopContext";  
 const NewCollections = () => {
+  const { updateInteraction } = useContext(ShopContext);
   const [new_collection, setNew_collection] = useState([]);
 
   useEffect(() => {
@@ -20,6 +21,7 @@ const NewCollections = () => {
         {new_collection.map((item, i) => {
           return (
             <Item
+              onclick={() => updateInteraction(item.id, "views")}
               key={i}
               id={item.id}
               name={item.name}

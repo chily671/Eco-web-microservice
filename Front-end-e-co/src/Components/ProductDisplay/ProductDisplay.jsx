@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "./ProductDisplay.css";
 import star_icon from "../Assets/star_icon.png";
 import star_dull_icon from "../Assets/star_dull_icon.png";
@@ -6,8 +6,12 @@ import { ShopContext } from "../../Context/ShopContext";
 
 const ProductDisplay = (props) => {
   const { product } = props;
-  const { addToCart } = useContext(ShopContext);
+  const { updateInteraction, addToCart } = useContext(ShopContext);
   console.log(product.image + "check check check");
+  
+  useEffect(() => {
+    updateInteraction(product.id, "views");
+  }, []);
   return (
     <div className="productdisplay">
       <div className="productdisplay-left">
@@ -24,11 +28,15 @@ const ProductDisplay = (props) => {
       <div className="productdisplay-right">
         <h1>{product.name}</h1>
         <div className="productdisplay-right-stars">
-          <img src={star_icon} alt="" />
-          <img src={star_icon} alt="" />
-          <img src={star_icon} alt="" />
-          <img src={star_dull_icon} alt="" />
-          <p>(122)</p>
+          {product.rating > 0 ? (
+            Array.from({ length: product.rating }).map((_, i) => (
+              <img key={i} src={star_icon} alt="" />
+            ))
+          ) : (
+            <img src={star_dull_icon} alt="" />
+          )}
+
+          <p>{product.rating}</p>
         </div>
         <div className="productdisplay-right-prices">
           <div className="productdisplay-right-price-old"></div>
@@ -51,6 +59,7 @@ const ProductDisplay = (props) => {
         <button
           onClick={() => {
             addToCart(product.id);
+            updateInteraction(product.id, "addToCart");
           }}
         >
           ADD TO CART

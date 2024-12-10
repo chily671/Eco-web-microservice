@@ -40,6 +40,29 @@ class ProductRepository {
     }
   }
 
+  async editProduct({
+    product_id,
+    name,
+    image,
+    brand,
+    model,
+    price
+  }) {
+    try {
+      const product = await ProductModel.findById(product_id);
+      product.name = name;
+      product.image = image;
+      product.brand = brand;
+      product.model = model;
+      product.price = price;
+      const productResult = await product.save();
+      return productResult;
+    }
+    catch (error) {
+      return error;
+    }
+  }
+
   async removeProduct(product_id) {
     try {
       const product = await ProductModel.findOneAndDelete(product_id);
@@ -68,12 +91,34 @@ class ProductRepository {
     }
   }
 
+  async rateProduct(productId, rating) {
+    try {
+      const product = await ProductModel.findById(productId);
+      product.rating = rating;
+      const updatedProduct = await product.save();
+      return updatedProduct;
+    } catch (error) {
+      return error;
+    } 
+  }
+
   async getProductNewCollection() {
     try {
       const products = await ProductModel.find();
       const newCollection = products.slice(1).slice(-8);
       return newCollection;
     } catch (error) {
+      return error;
+    }
+  }
+
+  async getRecommendedProducts(data) {
+    try {
+      const products = await ProductModel.find({ id : { $in: data } }
+      );
+      return products;
+    }
+    catch (error) {
       return error;
     }
   }
