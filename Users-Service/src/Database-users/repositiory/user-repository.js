@@ -90,18 +90,55 @@ class UserRepository {
     }
   }
 
+  async DecreaseQuantity(userId, productData) {
+    try {
+      const user = await UserModel.findById(userId);
+      const cart = user.cartData;
+      if (cart[productData] > 1) {
+        cart[productData] -= 1;
+      } else {
+        delete cart[productData];
+      }
+      await UserModel.findByIdAndUpdate(userId, { cartData: cart });
+      console.log("Product Removed from Cart");
+      return {
+        success: true,
+      };
+    } catch (error) {
+      return error;
+    }
+  }
+
+  async removeFromCart(userId, productData) {
+    try {
+      const user = await UserModel.findById(userId);
+      const cart = user.cartData;
+      delete cart[productData];
+      await UserModel.findByIdAndUpdate(userId, { cartData: cart });
+      console.log("Product Removed from Cart");
+      return {
+        success: true,
+        message: "Product Removed from Cart",
+        userID: userId,
+        product: productData,
+      };
+    } catch (error) {
+      return error;
+    }
+  }
+
   async UpdateInteraction(userId, productId, interaction) {
     try {
       const user = await UserModel.findById(userId);
-  
+
       if (!user) {
         throw new Error("User not found");
       }
-  
+
       if (!user.interactionHistory) {
         user.interactionHistory = new Map();
       }
-  
+
       // Kiểm tra và khởi tạo dữ liệu cho productId
       if (!user.interactionHistory.has(productId)) {
         user.interactionHistory.set(productId, {
@@ -111,10 +148,10 @@ class UserRepository {
           purchases: 0,
         });
       }
-  
+
       // Lấy dữ liệu hiện tại
       const productData = user.interactionHistory.get(productId);
-  
+
       // Cập nhật dữ liệu dựa trên hành động
       switch (interaction) {
         case "addToCart":
@@ -135,21 +172,24 @@ class UserRepository {
         default:
           throw new Error("Invalid interaction type");
       }
-  
+
       // Ghi dữ liệu đã cập nhật
       user.interactionHistory.set(productId, productData);
-  
+
       // Đánh dấu đã thay đổi và lưu
-      user.markModified('interactionHistory');
+      user.markModified("interactionHistory");
       await user.save();
-  
-      return { success: true, message: "Interaction Updated", cart: Array.from(user.interactionHistory.entries()) };
+
+      return {
+        success: true,
+        message: "Interaction Updated",
+        cart: Array.from(user.interactionHistory.entries()),
+      };
     } catch (error) {
       console.error("Error updating interaction:", error);
       return { success: false, message: error.message };
     }
   }
-  
 
   async clearCart(userId) {
     try {

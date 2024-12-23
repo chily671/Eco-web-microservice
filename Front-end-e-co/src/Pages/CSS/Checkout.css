@@ -14,7 +14,6 @@ form {
   input[type="email"],
   select {
     width: 100%;
-    padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
@@ -23,7 +22,7 @@ form {
   }
   
   button[type="submit"] {
-    background-color: #4CAF50;
+    background-color: rgb(79 70 229);
     color: white;
     padding: 10px 20px;
     border: none;
@@ -32,6 +31,6 @@ form {
   }
   
   button[type="submit"]:hover {
-    background-color: #45a049;
+    background-color: rgb(102, 95, 239);
   }
   

@@ -1,10 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
-import "./CheckoutPage.css";
-import VietnamData from "./ProvinceList";
+ import VietnamData from "./ProvinceList";
 import { ShopContext } from "../../Context/ShopContext";
 import CartItemUnit from "../CartItems/CartItemUnit";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import {loadStripe} from '@stripe/stripe-js';
+import { loadStripe } from "@stripe/stripe-js";
 const serverURL = "http://localhost:5009";
 
 const CheckoutPage = () => {
@@ -45,17 +44,27 @@ const CheckoutPage = () => {
   });
 
   const changHandler = (e) => {
-    setOrderDetail({ ...orderDetail, [e.target.name]: e.target.value });
-    if (e.target.name === "province") {
-      setProvince(e.target.value);
-      setCities(Object.keys(VietnamData[e.target.value]));
+    const { name, value } = e.target;
+    if (name === "phone" && !/^\d+$/.test(value)) {
+      alert("Vui lòng nhập số điện thoại hợp lệ.");
+      return;
     }
-    if (e.target.name === "city") {
-      setWards(VietnamData[province][e.target.value]);
+    if (name === "email" && !/\S+@\S+\.\S+/.test(value)) {
+      alert("Vui lòng nhập email hợp lệ.");
+      return;
+    }
+    if (name === "province") {
+      setProvince(value);
+      setCities(Object.keys(VietnamData[value]));
+      setWards([]); // Reset ward khi đổi province
+      setOrderDetail({ ...orderDetail, province: value, city: "", ward: "" });
+    } else if (name === "city") {
+      setWards(VietnamData[province][value]);
+      setOrderDetail({ ...orderDetail, city: value, ward: "" });
+    } else {
+      setOrderDetail({ ...orderDetail, [name]: value });
     }
   };
-
-  
 
   const OrderSuccess = () => {
     alert("Order successfully");
@@ -110,34 +119,35 @@ const CheckoutPage = () => {
   };
 
   const makeStripePayment = async () => {
-    const stripe = await loadStripe("pk_test_51QFV1OJu8ujkgWdNvelfz6p2KW3aP9zkLEe27fCuzvtfoWjUscrHK1RJOn52NZC8fQxl8zo1ZNZXiJUhF67umCl800HyCc5ZVl")
+    const stripe = await loadStripe(
+      "pk_test_51QFV1OJu8ujkgWdNvelfz6p2KW3aP9zkLEe27fCuzvtfoWjUscrHK1RJOn52NZC8fQxl8zo1ZNZXiJUhF67umCl800HyCc5ZVl"
+    );
     const body = {
-      order: orderDetail,}
-      console.log(body)
-  
+      order: orderDetail,
+    };
+    console.log(body);
 
-  const headers = {
-    "Content-Type": "application/json",
-    "auth-token": `${localStorage.getItem("auth-token")}`,
-  }
+    const headers = {
+      "Content-Type": "application/json",
+      "auth-token": `${localStorage.getItem("auth-token")}`,
+    };
 
-  const session = await fetch(`/pay/create-checkout-session`, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(body),
-  }).then((response) => response.json())
+    const session = await fetch(`/pay/create-checkout-session`, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(body),
+    }).then((response) => response.json());
 
-  const result = await stripe.redirectToCheckout({
-    sessionId: session.id,
-  })
-  if (result.error) {
-    console.log(result.error)
-  } else {
-    console.log("success")
-    AddOrder()
-  }
-  
-}
+    const result = await stripe.redirectToCheckout({
+      sessionId: session.id,
+    });
+    if (result.error) {
+      console.log(result.error);
+    } else {
+      console.log("success");
+      AddOrder();
+    }
+  };
   useEffect(() => {
     setOrderDetail({ ...orderDetail, total: totalCartAmount });
   }, [totalCartAmount]);
@@ -150,9 +160,8 @@ const CheckoutPage = () => {
     console.log(orderDetail);
   }, [orderDetail]);
 
-
   return (
-    <div className="checkout">
+    <div className="flex flex-col flex-grow items-center h-screen bg-gray-100">
       <div className="add-product">
         <div className="addproduct-itemfield">
           <p>Full name</p>
@@ -257,9 +266,13 @@ const CheckoutPage = () => {
           Complete Order
         </button>
 
-        <button onClick={() => {makeStripePayment()}}
-        >Pay with Stripe </button>
-        
+        <button
+          onClick={() => makeStripePayment()}
+          className="px-6 py-2 mt-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+        >
+          Pay with Stripe
+        </button>
+
         <PayPalScriptProvider options={initialOptions}>
           <PayPalButtons
             style={{
@@ -357,7 +370,7 @@ const CheckoutPage = () => {
         {all_product.map((e, index) => {
           if (e.id in cartItems) {
             return (
-              <CartItemUnit key={index} props={e} quantity={cartItems[e.id]} />
+              <CartItemUnit key={index} props={e} />
             );
           } else return null;
         })}

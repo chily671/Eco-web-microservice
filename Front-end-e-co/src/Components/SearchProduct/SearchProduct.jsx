@@ -9,6 +9,7 @@ import "../SearchBar/SearchBar.css";
 import "./SearchProduct.css";
 import iconsearch from "../Assets/pngwing.com (1).png";
 import iconImageSearch from "../Assets/lens.png";
+import { Link } from "react-router-dom";
 
 const HomePage = (props) => {
   const [search, setSearch] = useState("");
@@ -21,21 +22,20 @@ const HomePage = (props) => {
 
   const [filterProducts, setFilterProducts] = useState([]);
 
+
+
   const searchHandler = (e) => {
     setSearch(e.target.value);
   };
 
   useEffect(() => {
-    if (search === "") {
-      setFilterProducts(all_product);
-    } else {
       setFilterProducts(
         all_product.filter((val) =>
           val.name.toLowerCase().includes(search.toLowerCase())
         )
       );
     }
-  }, [search]);
+  , [search]);
 
   useEffect(() => {
     setViewProductIds(filterProducts.map((val) => val.id));

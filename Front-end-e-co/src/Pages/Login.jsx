@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaEye, FaEyeSlash, FaSpinner, FaUser, FaLock, FaEnvelope } from "react-icons/fa";
+import {
+  FaEye,
+  FaEyeSlash,
+  FaSpinner,
+  FaUser,
+  FaLock,
+  FaEnvelope,
+} from "react-icons/fa";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -7,57 +14,63 @@ const AuthPage = () => {
     email: "",
     password: "",
     confirmPassword: "",
-    username: ""
+    username: "",
   });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
 
-  const emailDomains = ["@gmail.com", "@yahoo.com", "@hotmail.com", "@outlook.com"];
+  const emailDomains = [
+    "@gmail.com",
+    "@yahoo.com",
+    "@hotmail.com",
+    "@outlook.com",
+  ];
 
-  const login = async () =>{
-    console.log("Login Function Excuted",formData)
+  const login = async () => {
+    console.log("Login Function Excuted", formData);
     let responseData;
-    await fetch('/user/login',{
-      method:'POST',
-      headers:{
-       'Accept': 'application/json',
-        'Content-Type':'application/json',
+    await fetch("/user/login", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
-    }).then((response)=> response.json()).then((data)=>responseData=data)
-    
-    if(responseData.success) {
-      localStorage.setItem('auth-token',responseData.token);
-      window.location.replace("/");
-    }
-    else {
-      alert(responseData.errors)
-    }
-  }
+    })
+      .then((response) => response.json())
+      .then((data) => (responseData = data));
 
-  const signup = async () =>{
-    console.log("signup Function Excuted",formData);
+    if (responseData.success) {
+      localStorage.setItem("auth-token", responseData.token);
+      window.location.replace("/");
+    } else {
+      alert(responseData.errors);
+    }
+  };
+
+  const signup = async () => {
+    console.log("signup Function Excuted", formData);
     let responseData;
-    await fetch('/user/signup',{
-      method:'POST',
-      headers:{
-        Accept:'application/form-data',
-        'Content-Type':'application/json',
+    await fetch("/user/signup", {
+      method: "POST",
+      headers: {
+        Accept: "application/form-data",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
-    }).then((response)=> response.json()).then((data)=>responseData=data)
-  
-    if(responseData.success) {
-      localStorage.setItem('auth-token',responseData.token);
+    })
+      .then((response) => response.json())
+      .then((data) => (responseData = data));
+
+    if (responseData.success) {
+      localStorage.setItem("auth-token", responseData.token);
       window.location.replace("/");
+    } else {
+      alert(responseData.errors);
     }
-    else {
-      alert(responseData.errors)
-    }
-  
-  }
+  };
 
   const validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -69,9 +82,7 @@ const AuthPage = () => {
     setFormData({ ...formData, [name]: value });
 
     if (name === "email" && !value.includes("@")) {
-      setSuggestions(
-        emailDomains.map((domain) => `${value}${domain}`)
-      );
+      setSuggestions(emailDomains.map((domain) => `${value}${domain}`));
     } else {
       setSuggestions([]);
     }
@@ -112,7 +123,7 @@ const AuthPage = () => {
       }
     }
 
-    if (name === "name") {
+    if (name === "username") {
       if (!value) {
         newErrors.name = "Name is required";
       } else if (value.length < 2) {
@@ -147,27 +158,31 @@ const AuthPage = () => {
       email: "",
       password: "",
       confirmPassword: "",
-      name: ""
+      username: "",
     });
     setErrors({});
     setSuggestions([]);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white/10 backdrop-blur-lg p-8 rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-[1.02] border border-white/20">
+    <div className="min-h-screen flex items-center justify-center bg-white py-12 px-4 sm:px-6 lg:px-8">
+      <div className="bg-[#232323] max-w-md w-full space-y-8  backdrop-blur-lg p-8 rounded-2xl shadow-2xl transform transition-all duration-300 hover:scale-[1.02] border border-white/20">
         <div>
-          <h2 className="mt-6 text-center text-4xl font-extrabold text-white tracking-tight">
+          <h2 className=" mt-6 text-center text-4xl font-extrabold text-white tracking-tight">
             {isLogin ? "Welcome Back" : "Join Us Today"}
           </h2>
           <p className="mt-2 text-center text-sm text-white/80">
-            {isLogin ? "Sign in to continue your journey" : "Create an account to get started"}
+            {isLogin
+              ? "Sign in to continue your journey"
+              : "Create an account to get started"}
           </p>
           <button
             onClick={toggleAuthMode}
             className="mt-4 w-full text-sm font-medium text-white hover:text-white/80 transition-colors duration-300 underline decoration-2 underline-offset-4"
           >
-            {isLogin ? "Need an account? Sign up" : "Already have an account? Sign in"}
+            {isLogin
+              ? "Need an account? Sign up"
+              : "Already have an account? Sign in"}
           </button>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -179,16 +194,18 @@ const AuthPage = () => {
                 </div>
                 <input
                   id="name"
-                  name="name"
+                  name="username"
                   type="text"
                   autoComplete="name"
                   required
-                  className={`appearance-none block w-full pl-10 px-3 py-3 border ${errors.name ? "border-red-500" : "border-white/20"} bg-white/5 text-white placeholder-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent sm:text-sm transition-all duration-300`}
+                  className={`appearance-none block ml w-full pl-10 px-3 py-3 border ${
+                    errors.username ? "border-red-500" : "border-white/20"
+                  } bg-white/5 text-white placeholder-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent sm:text-sm transition-all duration-300`}
                   placeholder="Full Name"
-                  value={formData.name}
+                  value={formData.username}
                   onChange={handleInputChange}
                 />
-                {errors.name && (
+                {errors.username && (
                   <p className="mt-2 text-sm text-red-400">{errors.name}</p>
                 )}
               </div>
@@ -203,7 +220,9 @@ const AuthPage = () => {
                 type="email"
                 autoComplete="email"
                 required
-                className={`appearance-none block w-full pl-10 px-3 py-3 border ${errors.email ? "border-red-500" : "border-white/20"} bg-white/5 text-white placeholder-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent sm:text-sm transition-all duration-300`}
+                className={`appearance-none block w-full pl-10 px-3 py-3 border ${
+                  errors.email ? "border-red-500" : "border-white/20"
+                } bg-white/5 text-white placeholder-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent sm:text-sm transition-all duration-300`}
                 placeholder="Email address"
                 value={formData.email}
                 onChange={handleInputChange}
@@ -235,7 +254,9 @@ const AuthPage = () => {
                 type={showPassword ? "text" : "password"}
                 autoComplete="current-password"
                 required
-                className={`appearance-none block w-full pl-10 px-3 py-3 border ${errors.password ? "border-red-500" : "border-white/20"} bg-white/5 text-white placeholder-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent sm:text-sm transition-all duration-300`}
+                className={`appearance-none block w-full pl-10 px-3 py-3 border ${
+                  errors.password ? "border-red-500" : "border-white/20"
+                } bg-white/5 text-white placeholder-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent sm:text-sm transition-all duration-300`}
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleInputChange}
@@ -265,13 +286,19 @@ const AuthPage = () => {
                   name="confirmPassword"
                   type={showPassword ? "text" : "password"}
                   required
-                  className={`appearance-none block w-full pl-10 px-3 py-3 border ${errors.confirmPassword ? "border-red-500" : "border-white/20"} bg-white/5 text-white placeholder-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent sm:text-sm transition-all duration-300`}
+                  className={`appearance-none block w-full pl-10 px-3 py-3 border ${
+                    errors.confirmPassword
+                      ? "border-red-500"
+                      : "border-white/20"
+                  } bg-white/5 text-white placeholder-white/60 rounded-xl focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-transparent sm:text-sm transition-all duration-300`}
                   placeholder="Confirm Password"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
                 />
                 {errors.confirmPassword && (
-                  <p className="mt-2 text-sm text-red-400">{errors.confirmPassword}</p>
+                  <p className="mt-2 text-sm text-red-400">
+                    {errors.confirmPassword}
+                  </p>
                 )}
               </div>
             )}
@@ -280,9 +307,9 @@ const AuthPage = () => {
           <div>
             <button
               type="submit"
-              {...(isLogin ? onclick={login} : onclick={signup})}
+              onClick={isLogin ? login : signup}
               disabled={isLoading || Object.keys(errors).length > 0}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-pink-500 disabled:hover:to-indigo-600"
+              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-xl text-white bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:from-pink-500 disabled:hover:to-indigo-600"
             >
               {isLoading ? (
                 <FaSpinner className="animate-spin h-5 w-5" />

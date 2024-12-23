@@ -1,55 +1,103 @@
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import LabelEncoder
-from sklearn.metrics import mean_absolute_error, mean_squared_error
-from sklearn.decomposition import TruncatedSVD
+from surprise import SVD, Dataset, Reader
 from sklearn.feature_extraction.text import TfidfVectorizer
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Embedding, Flatten
-from tensorflow.keras.optimizers import Adam
+from sklearn.metrics.pairwise import linear_kernel
+import tensorflow as tf
+from tensorflow.keras.layers import Input, Embedding, Flatten, Dot, Dense, Concatenate
+from tensorflow.keras.models import Model
 
 # Load data
-data = pd.read_csv('/mnt/data/data.csv')
+data = pd.read_csv('aggregated_for_recommender.csv')
 
-# Làm sạch và chuẩn hóa dữ liệu
-data = data.dropna()  # Loại bỏ các giá trị thiếu
-data['price'] = data['price'].astype(float)  # Chuyển đổi price thành số thực
+# TF-IDF (Content-Based Filtering)
+def build_tfidf_model(data):
+    content_df = data[['Product ID', 'Product Name', 'Brand', 'Price']]
+    content_df['content'] = content_df.apply(lambda row: ' '.join(row.dropna().astype(str)), axis=1)
+    tfidf_vectorizer = TfidfVectorizer()
+    content_matrix = tfidf_vectorizer.fit_transform(content_df['content'])
+    content_similarity = linear_kernel(content_matrix, content_matrix)
+    return content_similarity, content_df
 
-# Encode categorical features
-categorical_features = ['brand', 'model', 'mvmt', 'casem', 'bracem', 'yop', 'condition', 'sex', 'size']
-le = LabelEncoder()
-for col in categorical_features:
-    data[col] = le.fit_transform(data[col])
+def get_content_recommendations(product_id, top_n, content_similarity, content_df):
+    index = content_df[content_df['Product ID'] == product_id].index[0]
+    similarity_scores = content_similarity[index]
+    similar_indices = similarity_scores.argsort()[::-1][1:top_n+1]
+    recommendations = content_df.loc[similar_indices, 'Product ID'].values
+    return recommendations.tolist()
 
-# TF-IDF cho các thuộc tính văn bản
-tfidf = TfidfVectorizer(stop_words='english')
-tfidf_matrix = tfidf.fit_transform(data['name'])
+# SVD (Collaborative Filtering)
+def build_svd_model(data):
+    reader = Reader(rating_scale=(1, 5))
+    data_surprise = Dataset.load_from_df(data[['user_id', 'Product ID', 'Rating']], reader)
+    trainset = data_surprise.build_full_trainset()
+    svd_model = SVD()
+    svd_model.fit(trainset)
+    return svd_model, trainset
 
-# Kết hợp dữ liệu
-svd = TruncatedSVD(n_components=50)
-svd_features = svd.fit_transform(tfidf_matrix)
+def get_svd_recommendations(user_id, top_n, svd_model, trainset):
+    testset = trainset.build_anti_testset()
+    predictions = svd_model.test(filter(lambda x: x[0] == user_id, testset))
+    predictions.sort(key=lambda x: x.est, reverse=True)
+    return [pred.iid for pred in predictions[:top_n]]
 
-# Tách dữ liệu cho huấn luyện và kiểm tra
-X = svd_features
-y = data['price']
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+# Neural Collaborative Filtering (NCF)
+def build_ncf_model(data):
+    user_ids = data['user_id'].unique()
+    product_ids = data['Product ID'].unique()
 
-# Xây dựng mô hình NCF
-model = Sequential([
-    Embedding(input_dim=50, output_dim=50, input_length=svd_features.shape[1]),
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dense(1)
-])
+    user_map = {u: i for i, u in enumerate(user_ids)}
+    product_map = {p: i for i, p in enumerate(product_ids)}
 
-model.compile(optimizer=Adam(), loss='mean_squared_error', metrics=['mean_absolute_error'])
-model.fit(X_train, y_train, epochs=20, batch_size=128, validation_split=0.2)
+    data['user_index'] = data['user_id'].map(user_map)
+    data['product_index'] = data['Product ID'].map(product_map)
 
-# Dự đoán và đánh giá hiệu suất
-predictions = model.predict(X_test)
-mae = mean_absolute_error(y_test, predictions)
-rmse = np.sqrt(mean_squared_error(y_test, predictions))
+    num_users = len(user_ids)
+    num_products = len(product_ids)
 
-print(f'Mean Absolute Error: {mae:.4f}')
-print(f'Root Mean Squared Error: {rmse:.4f}')
+    user_input = Input(shape=(1,))
+    product_input = Input(shape=(1,))
+    user_embedding = Flatten()(Embedding(num_users, 50)(user_input))
+    product_embedding = Flatten()(Embedding(num_products, 50)(product_input))
+    dot_product = Dot(axes=1)([user_embedding, product_embedding])
+    concat = Concatenate()([user_embedding, product_embedding])
+    dense = Dense(64, activation='relu')(concat)
+    output = Dense(1, activation='linear')(dense)
+
+    ncf_model = Model([user_input, product_input], output)
+    ncf_model.compile(optimizer='adam', loss='mean_squared_error')
+    ncf_model.fit([data['user_index'], data['product_index']], data['Rating'], epochs=5, batch_size=32)
+    return ncf_model, user_map, product_map
+
+def get_ncf_recommendations(user_id, top_n, ncf_model, user_map, product_map):
+    user_idx = user_map[user_id]
+    num_products = len(product_map)
+    product_scores = ncf_model.predict([tf.constant([user_idx] * num_products), tf.constant(range(num_products))])
+    product_indices = product_scores.numpy().flatten().argsort()[::-1][:top_n]
+    product_ids = list(product_map.keys())
+    return [product_ids[i] for i in product_indices]
+
+# Hybrid Model
+def hybrid_recommendation(user_id, product_id, top_n, content_similarity, content_df, svd_model, trainset, ncf_model, user_map, product_map, alpha=0.4, beta=0.3, gamma=0.3):
+    content_recs = get_content_recommendations(product_id, top_n, content_similarity, content_df)
+    svd_recs = get_svd_recommendations(user_id, top_n, svd_model, trainset)
+    ncf_recs = get_ncf_recommendations(user_id, top_n, ncf_model, user_map, product_map)
+
+    scores = {rec: alpha for rec in content_recs}
+    for rec in svd_recs:
+        scores[rec] = scores.get(rec, 0) + beta
+    for rec in ncf_recs:
+        scores[rec] = scores.get(rec, 0) + gamma
+
+    sorted_recs = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+    return [rec[0] for rec in sorted_recs[:top_n]]
+
+# Run models
+content_similarity, content_df = build_tfidf_model(data)
+svd_model, trainset = build_svd_model(data)
+ncf_model, user_map, product_map = build_ncf_model(data)
+
+# Example recommendation
+user_id = "example_user_id"
+product_id = "example_product_id"
+recommendations = hybrid_recommendation(user_id, product_id, 10, content_similarity, content_df, svd_model, trainset, ncf_model, user_map, product_map)
+print("Hybrid Recommendations:", recommendations)

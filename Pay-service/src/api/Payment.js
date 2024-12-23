@@ -152,7 +152,7 @@ module.exports = async (app, channel) => {
     const productsID = Object.keys(order.products);
     console.log("productsID: " + productsID);
     for (const prodcutID of productsID) {
-    const cartItem = await fetch(`http://localhost:5000/product/${productsID}`, {
+    const cartItem = await fetch(`${PRODUCT_SERVICE_URL}/product/${productsID}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -161,7 +161,7 @@ module.exports = async (app, channel) => {
     console.log(cartItem);
     const product = cartItem;
     console.log(product);
-    const imageUrl = `http://localhost:5000${product.image.replace('product/', '')}`;
+    const imageUrl = `${PRODUCT_SERVICE_URL}${product.image.replace('product/', '')}`;
     const lineItems = [{
       price_data: {
         currency: "usd",
@@ -176,7 +176,7 @@ module.exports = async (app, channel) => {
   
 
   console.log(lineItems);
-  const AddOrder = await fetch(`http://localhost:5002/order`, {
+  const AddOrder = await fetch(`${ORDER_SERVICE_URL}/order`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

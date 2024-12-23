@@ -2,7 +2,7 @@ const ProductService = require("../services/product-service");
 const { PublishMessage } = require("../utils");
 const express = require("express");
 const UserAuth = require("./middlewares/auth");
-const { USER_SERVICE } = require("../config");
+const { USER_SERVICE, RS_SERVICE_URL, SEARCH_SERVICE_URL } = require("../config");
 const jwt = require("jsonwebtoken");
 const uuid = require("uuid");
 const multer = require("multer");
@@ -205,38 +205,6 @@ module.exports = async (app, channel) => {
 
   // Creating Upload Endpoint for imageSearch
   app.use("/imagesearchstorage", express.static("upload/imageSearch"));
-  //       let imageSearchformData = new FormData();
-  //       console.log("formdata created");
-
-  //       console.log("req.file:" + req.file);
-
-  //       const fileStream = fs.createReadStream(req.file.path);
-  //       imageSearchformData.append(
-  //         "query_img",
-  //         fileStream,
-  //         req.file.originalname
-  //       ); // Thêm tệp vào FormData
-
-  //       console.log("File uploaded successfully:", req.file);
-  //       // imageSearchformData.append("query_img", req.file.filename);
-
-  //       // // Gửi formData đến URL khác
-  //       // const response = await fetch("http://localhost:1234/imagesearch", {
-  //       //   method: "POST",
-  //       //   body: imageSearchformData,
-  //       // });
-
-  //       // // Đọc và trả về phản hồi từ URL khác
-  //       // res.json(await response.json());
-
-  //       res.json({ message: "Image uploaded" });
-  //     } catch (err) {
-  //       console.log(req.file);
-  //       console.error(err);
-  //       res.status(500).send("Internal Server Error");
-  //     }
-  //   }
-  // );
 
   app.post(
     "/imagesearch",
@@ -260,7 +228,7 @@ module.exports = async (app, channel) => {
         imageSearchformData.append("query_img", req.file.filename);
         console.log(imageSearchformData);
         // Gửi formData đến URL khác
-        const response = await fetch("http://localhost:1234/imagesearch", {
+        const response = await fetch(`${SEARCH_SERVICE_URL}/imagesearch`, {
           method: "POST",
           body: imageSearchformData,
         }).catch((error) => console.error("Error:", error));
@@ -281,7 +249,7 @@ module.exports = async (app, channel) => {
       console.log(req.body.image_filename);
       formData.append("image_filename", req.body.image_filename);
       // Gui formData den URL khac
-      const response = await fetch("http://localhost:1234/retrain", {
+      const response = await fetch(`${SEARCH_SERVICE_URL}/retrain`, {
         method: "POST",
         body: formData,
       });
@@ -297,7 +265,7 @@ module.exports = async (app, channel) => {
     try {
       let userID = req.user.id;
       console.log(userID);
-      const response = await fetch("http://localhost:1357/recommend", {
+      const response = await fetch(`${RS_SERVICE_URL}/recommend`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

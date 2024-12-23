@@ -35,6 +35,7 @@ const ChatPopup = () => {
     }
     console.log(e);
     addMessage(e, true, localStorage.getItem("auth-token"));
+    setInputMessage("");
   }
 
   return (

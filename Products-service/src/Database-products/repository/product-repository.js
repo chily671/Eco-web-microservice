@@ -105,7 +105,7 @@ class ProductRepository {
   async getProductNewCollection() {
     try {
       const products = await ProductModel.find();
-      const newCollection = products.slice(1).slice(-8);
+      const newCollection = products.slice(1).slice(-12);
       return newCollection;
     } catch (error) {
       return error;

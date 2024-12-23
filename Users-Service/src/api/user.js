@@ -71,18 +71,19 @@ module.exports = async (app, channel) => {
 
   app.post("/signup", async (req, res) => {
     try {
+      console.log("Signup request received", req.body);
       const { username, email, password } = req.body;
       if (!username || !password || !email) {
         return res.status(400).json({ message: "Missing required fields" });
       }
       const user = await service.Register({ username, email, password });
-      await fetch("http://localhost:1357/loaddata", {
-        method: "POST",
-        body: JSON.stringify({ email: email }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      // await fetch("http://localhost:1357/loaddata", {
+      //   method: "POST",
+      //   body: JSON.stringify({ email: email }),
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // });
       console.log("User Created");
       console.log(user);
       return res.status(200).json(user);
@@ -94,15 +95,15 @@ module.exports = async (app, channel) => {
   // Admin signup
   app.post("/adminsignup", async (req, res) => {
     try {
-      let check = await service.CheckAdmin({ email: "admin" });
+      let check = await service.CheckAdmin({ email: "adminadmin@gmail.com" });
       if (check) {
         res.json({ success: false, message: "Admin already exists" });
         return;
       }
       const administrator = await service.RegisterAdmin({
         username: "admin",
-        email: "admin",
-        password: "admin",
+        email: "admin@gmail.com",
+        password: "12345678",
       });
       return res.status(200).json({ message: "Admin Created" });
     } catch (error) {
@@ -174,6 +175,29 @@ module.exports = async (app, channel) => {
       console.log("userId:", userId);
       console.log("productId:", productId);
       const cart = await service.AddToCart(userId.id, productId);
+      return res.status(200).json(cart);
+    } catch (error) {
+      return res.status(400).json({ message: error.message });
+    }
+  });
+  // decrement quantity of product in cart
+  app.post("/decrease", fetchUser, async (req, res) => {
+    try {
+      const userId = req.user;
+      const productId = req.body.itemId;
+      const cart = await service.DecreaseQuantity(userId.id, productId);
+      return res.status(200).json(cart);
+    } catch (error) {
+      return res.status(400).json({ message: error.message });
+    }
+  });
+
+  // remove product from cart
+  app.post("/removefromcart", fetchUser, async (req, res) => {
+    try {
+      const userId = req.user;
+      const productId = req.body.itemId;
+      const cart = await service.RemoveFromCart(userId.id, productId);
       return res.status(200).json(cart);
     } catch (error) {
       return res.status(400).json({ message: error.message });

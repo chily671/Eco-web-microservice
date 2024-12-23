@@ -14,6 +14,7 @@ const UserSchema = new mongoose.Schema({
   },
   cartData: {
     type: Object,
+    default: {},
   },
   orderData: {
     type: Array,
@@ -29,7 +30,7 @@ const UserSchema = new mongoose.Schema({
       views: { type: Number, default: 0 },
       purchases: { type: Number, default: 0 },
     },
-    default: {},
+    default : new Map(),
   },
   date: {
     type: Date,

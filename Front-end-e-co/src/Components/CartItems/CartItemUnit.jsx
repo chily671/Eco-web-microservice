@@ -1,8 +1,10 @@
 import React, { useContext } from "react";
 import "./CartItemUnit.css";
 import { ShopContext } from "../../Context/ShopContext";
-const CartItemUnit = ({ props, quantity }) => {
-  const { removeFromCart, increaseQuantity, decreaseQuantity } =
+import { FiMinus, FiPlus } from "react-icons/fi";
+
+const CartItemUnit = ({ props }) => {
+  const { removeFromCart, addToCart, decreaseQuantity, cartItems } =
     useContext(ShopContext);
 
   return (
@@ -23,17 +25,17 @@ const CartItemUnit = ({ props, quantity }) => {
           <div>
             <span className="quantity-label">Quantity:</span>
             <button
-              onClick={decreaseQuantity}
-              className="quantity-button decrease-button"
+              className="p-1 hover:bg-gray-100 rounded"
+              onClick={() => decreaseQuantity(props.id)}
             >
-              -
+              <FiMinus className="h-4 w-4" />
             </button>
-            <span className="quantity-value">{quantity}</span>
+            <span className="text-sm">{cartItems[props.id]}</span>
             <button
-              onClick={increaseQuantity}
-              className="quantity-button increase-button"
+              className="p-1 hover:bg-gray-100 rounded"
+              onClick={() => addToCart(props.id)}
             >
-              +
+              <FiPlus className="h-4 w-4" />
             </button>
           </div>
         </div>

@@ -1,6 +1,7 @@
 import React from 'react'
 import './Popular.css'
 import Item from '../Item/Item'
+import NewItem from '../Item/NewItem'
 import { useState } from 'react'
 import { useEffect } from 'react'
 const Popular = () => {
@@ -19,7 +20,7 @@ useEffect(()=>{
       <hr />
       <div className="popular-item">
         {popularProducts.map((item,i)=>{
-            return <Item key={i} id={item.id} name={item.name} image={item.image} price={item.price} />
+            return <NewItem key={i} id={item.id} name={item.name} image={item.image} price={item.price} />
         })}
       </div>
     </div>

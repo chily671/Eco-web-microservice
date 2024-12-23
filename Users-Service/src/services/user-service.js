@@ -86,7 +86,7 @@ class UserService {
         };
 
         const token =
-          UserInput.email === "admin"
+          UserInput.email === "admin@gmail.com"
             ? jwt.sign(data, "admin")
             : jwt.sign(data, "user");
         console.log("User Logged In");
@@ -101,6 +101,26 @@ class UserService {
   async AddToCart(userId, productData) {
     try {
       const cart = await this.repository.addToCart(userId, productData);
+      return cart;
+    } catch (error) {
+      console.log(error);
+      return { success: false, message: "Internal Server Error" };
+    }
+  }
+
+  async DecreaseQuantity(userId, productData) {
+    try {
+      const cart = await this.repository.DecreaseQuantity(userId, productData);
+      return cart;
+    } catch (error) {
+      console.log(error);
+      return { success: false, message: "Internal Server Error" };
+    }
+  }
+
+  async RemoveFromCart(userId, productData) {
+    try { 
+      const cart = await this.repository.removeFromCart(userId, productData);
       return cart;
     } catch (error) {
       console.log(error);

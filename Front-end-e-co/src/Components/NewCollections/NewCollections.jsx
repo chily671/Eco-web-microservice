@@ -1,9 +1,10 @@
 import React from "react";
 import Item from "../Item/Item";
+import NewItem from "../Item/NewItem";
 import "./NewCollections.css";
 import { useState } from "react";
 import { useEffect, useContext } from "react";
-import { ShopContext } from "../../Context/ShopContext";  
+import { ShopContext } from "../../Context/ShopContext";
 const NewCollections = () => {
   const { updateInteraction } = useContext(ShopContext);
   const [new_collection, setNew_collection] = useState([]);
@@ -14,13 +15,13 @@ const NewCollections = () => {
       .then((data) => setNew_collection(data));
   }, []);
   return (
-    <div className="new-collections">
+    <div className="new-collections ">
       <h1>NEW COLLECTIONS</h1>
       <hr />
       <div className="collections">
         {new_collection.map((item, i) => {
           return (
-            <Item
+            <NewItem
               onclick={() => updateInteraction(item.id, "views")}
               key={i}
               id={item.id}

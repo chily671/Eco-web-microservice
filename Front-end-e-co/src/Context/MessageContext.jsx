@@ -87,7 +87,10 @@ const MessageContextProvider = (props) => {
 
     socket.on("connect", () => {
       console.log("Connected to server");
-
+      socket.on("userTyping", (data) => {
+        // Phát sự kiện "userTyping" tới admin
+        io.emit("adminUserTyping", { user_id: data.user_id });
+      } );
       // Lắng nghe tin nhắn từ server
       socket.on("message", (data) => {
         console.log(data);
