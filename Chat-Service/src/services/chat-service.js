@@ -1,14 +1,4 @@
-// All API Logic goes here
-// All Buisiness Logic goes here
 const { ChatRepository } = require("../database");
-//const { ValidateSignature, ComparePassword } = require("../utils");
-// const {
-//   GeneratePassword,
-//   GenerateSalt,
-//   ValidatePassword,
-//   GenerateSignature,
-//   FormateData,
-// } = require("../utils");
 
 class ChatService {
   constructor() {
