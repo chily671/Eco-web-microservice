@@ -8,6 +8,7 @@ const httpProxy = require("http-proxy");
 const jwt = require("jsonwebtoken");
 const { timeStamp } = require("console");
 const ChatService = require("./src/services/chat-service");
+const { USER_SERVICE_URL, RS_SERVICE_URL, SEARCH_SERVICE_URL } = require("../config");
 const app = express();
 chat(app);
 app.use(express.json());
@@ -50,7 +51,7 @@ io.on("connection", async (socket) => {
   const token = socket.handshake.auth.token;
   // console.log("Token in connection: ", token);
   try {
-    const decoded = await fetch("http://localhost:5001/decodetoken", {
+    const decoded = await fetch(`${USER_SERVICE_URL}/decodetoken`, {
       method: "POST",
       headers: {
         "auth-token": token,
@@ -60,7 +61,7 @@ io.on("connection", async (socket) => {
     socket.join(decoded);
     console.log("User connected to user: ", decoded);
     // Get all users from database and join their rooms by their id
-    const users = await fetch("http://localhost:5001/allusers", {
+    const users = await fetch(`${USER_SERVICE_URL}/allusers`, {
       method: "GET",
       headers: {
         "auth-token": token,
@@ -128,7 +129,7 @@ io.on("connection", async (socket) => {
       // Giai mã token
       console.log("User ID - token in addmessage: ", data.user_id);
       let token = data.user_id;
-      const userid = await fetch("http://localhost:5001/decodetoken", {
+      const userid = await fetch(`${USER_SERVICE_URL}/decodetoken`, {
         method: "POST",
         headers: {
           "auth-token": token,

@@ -16,4 +16,6 @@ module.exports = {
     MSG_QUEUE_URL: process.env.MSG_QUEUE_URL,
     USER_SERVICE: "user_service",
     ORDER_SERVICE: "order_service",
+    USER_SERVICE_URL: process.env.USER_SERVICE_URL,
+
 };
