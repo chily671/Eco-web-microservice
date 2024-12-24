@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: https://ecommerce.chily.io.vn/ # Thay bằng tên miền sử dụng Cloudflare Tunnel
+  - host: ecommerce.chily.io.vn/ # Thay bằng tên miền sử dụng Cloudflare Tunnel
     http:
       paths:
       - path: /
