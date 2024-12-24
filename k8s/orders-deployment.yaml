@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: orders-service
-        image: lykieuchi/ecommerce-web-order-service:2.0
+        image: lykieuchi/ecommerce-web-order-service:3.0
         ports:
         - containerPort: 5002
         env:

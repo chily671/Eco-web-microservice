@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: lykieuchi/ecommerce-web-front-end:2.0
+          image: lykieuchi/ecommerce-web-front-end:3.0
           ports:
             - containerPort: 3000  
 
