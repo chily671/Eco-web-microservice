@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     name: Deploy to Kubernetes
-    runs-on: [self-hosted, kubernetes]
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
