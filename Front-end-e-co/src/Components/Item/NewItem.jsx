@@ -1,11 +1,20 @@
-import React, { useContext } from "react";
-import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
+import React, { useContext, useState } from "react";
+import { FaStar, FaStarHalfAlt, FaRegStar, FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { ShopContext } from "../../Context/ShopContext";
 
-
 const NewItem = (props) => {
   const { addToCart } = useContext(ShopContext);
+  const [wishlist, setWishlist] = useState([]);
+
+  const toggleWishlist = (productId) => {
+    setWishlist((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId]
+    );
+  };
+
   const RatingStars = ({ rating }) => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -37,6 +46,17 @@ const NewItem = (props) => {
             }}
           />
         </Link>
+        <button
+          onClick={() => toggleWishlist(props.id)}
+          className={`absolute top-4 right-4 p-2 rounded-full ${
+            wishlist.includes(props.id)
+              ? "bg-red-500 text-white"
+              : "bg-white text-gray-600"
+          }`}
+          aria-label={`Add ${props.name} to wishlist`}
+        >
+          <FaHeart />
+        </button>
       </div>
       <div className="p-4">
         <h3 className="text-lg font-semibold text-gray-800 mb-2 truncate">
@@ -50,7 +70,7 @@ const NewItem = (props) => {
         </div>
         <button
           className="w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors duration-300"
-          onClick={() =>addToCart(props.id)}
+          onClick={() => addToCart(props.id)}
         >
           Add to Cart
         </button>

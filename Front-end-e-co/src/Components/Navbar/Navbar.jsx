@@ -130,30 +130,19 @@ const Navbar = () => {
                   </button>
                   <div className="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 group-hover:opacity-100 transition-opacity duration-150 ease-in-out">
                     <div className="py-1">
-                      <a
-                        href="#"
+                      <Link
+                        to="/shop/men"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         Men's Watches
-                      </a>
-                      <a
-                        href="#"
+                      </Link>
+
+                      <Link
+                        to="/shop/women"
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                       >
                         Women's Watches
-                      </a>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Luxury Watches
-                      </a>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        Smartwatches
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -236,7 +225,7 @@ const Navbar = () => {
               </button>
 
               {cartOpen && (
-                <div className="absolute right-0 mt-2 w-fit bg-white rounded-md shadow-lg">
+                <div className="absolute right-0 mt-2 w-96 bg-white rounded-md shadow-lg">
                   <div className="p-4">
                     <h3 className="text-lg font-semibold mb-3">
                       Shopping Cart
@@ -294,7 +283,12 @@ const Navbar = () => {
                           ${getTotalCartAmount()}
                         </span>
                       </div>
-                      <Link to="/checkout" onClick={() => {setCartOpen(false)}}>
+                      <Link
+                        to="/checkout"
+                        onClick={() => {
+                          setCartOpen(false);
+                        }}
+                      >
                         <button className="w-full mt-3 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors">
                           Checkout
                         </button>
@@ -357,10 +351,18 @@ const Navbar = () => {
                 Home
               </div>
             </Link>
-            <Link to="/">
-              <div className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-50">
-                Shop
-              </div>
+            <Link
+              to="/shop/men"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+            Men's Watches
+            </Link>
+
+            <Link
+              to="/shop/women"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+            >
+            Women's Watches
             </Link>
             <Link to="/">
               <div className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-50">

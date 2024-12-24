@@ -10,7 +10,7 @@ import "./App.css";
 import CheckoutPage from "./Components/Checkout/CheckoutPage";
 import NewFooter from "./Components/Footer/newFooter";
 import NavBar from "./Components/Navbar/Navbar";
-import Shopping from "./Components/Shopping/Shopping";
+import Shopping from "./Pages/Shopping";
 import Stripe from "./Components/StripePayMent/StripePayMent";
 import { AuthenticationContext } from "./Context/AuthenticationContext";
 import AdminChat from "./Pages/AdminChat";
@@ -21,6 +21,7 @@ import LoginSignup from "./Pages/LoginSignup";
 import Product from "./Pages/Product";
 import Shop from "./Pages/Shop";
 import UserProfile from "./Pages/UserProfile";
+import ShopCategory from "./Pages/ShopCategory";
 function App() {
   const { isAdmin } = useContext(AuthenticationContext);
   return (
@@ -34,7 +35,8 @@ function App() {
           <Route path="/admincheckorder" element={<AdminCheckOrder />} />
           <Route path="/order" element={<Order />} />
           <Route path="/" element={<Shop />} />
-          <Route path="/shop" element={<Shopping />} />
+          <Route path="/shop/women" element={<Shopping />} />
+          <Route path="/shop/men" element={<ShopCategory />} />
           <Route path="/products">
             <Route path=":productId" element={<Product />} />
           </Route>

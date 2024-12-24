@@ -1,0 +1,19 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - Add-chat-service 
+
+jobs:
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: [self-hosted, kubernetes]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Apply Kubernetes configurations
+        run: |
+          kubectl apply -f k8s/
