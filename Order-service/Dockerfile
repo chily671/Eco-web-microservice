@@ -2,12 +2,9 @@ FROM node
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
-
-RUN npm install --only=production
-# RUN npm install
-
 COPY . .
+
+RUN npm install
 
 EXPOSE 5002
 

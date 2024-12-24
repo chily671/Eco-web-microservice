@@ -6,7 +6,6 @@ module.exports.databaseConnection = async() => {
         await mongoose.connect(DB_URL,
             {  tls:true }
         );
-        console.log(DB_URL);
         console.log('Db Connected');
         
     } catch (error) {
