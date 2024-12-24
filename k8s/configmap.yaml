@@ -2,6 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: app-config
+  namespace: eco-web-microservices
 data:
   SEARCH_SERVICE_URL: http://search-service:1234
   RS_SERVICE_URL: http://rs-service:1357
