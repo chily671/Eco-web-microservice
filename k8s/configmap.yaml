@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  SEARCH_SERVICE_URL: http://search-service:1234
+  RS_SERVICE_URL: http://rs-service:1357
+  PRODUCT_SERVICE_URL: http://products-service:5000
+  USER_SERVICE_URL: http://users-service:5001
+  ORDER_SERVICE_URL: http://orders-service:5002
