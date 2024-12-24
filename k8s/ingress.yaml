@@ -2,12 +2,10 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ecommerce-ingress
-  annotations:
-    kubernetes.io/ingress.class: "nginx"
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
+  ingressClassName: nginx
   rules:
-  - host: ecommerce.chily.io.vn # Thay bằng tên miền sử dụng Cloudflare Tunnel
+  - host: ecommerce.chily.io.vn #  Thay bằng tên miền sử dụng Cloudflare Tunnel
     http:
       paths:
       - path: /
