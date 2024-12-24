@@ -8,10 +8,6 @@ const uuid = require("uuid");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
-// UID Generation
-function generateID() {
-  return uuid.v4();
-}
 module.exports = async (app, channel) => {
   const service = new ProductService();
 

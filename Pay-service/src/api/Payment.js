@@ -4,8 +4,17 @@ const {
   PAYPAL_CLIENT_ID,
   PAYPAL_CLIENT_SECRET,
   PAYPAL_API,
-  STRIPE_SECRET_KEY
+  STRIPE_SECRET_KEY,
+  PRODUCT_SERVICE_URL,
+  ORDER_SERVICE_URL,
+  USER_SERVICE_URL,
 } = require("../config");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
+const fetch = require("node-fetch");
+const express = require("express");
+const axios = require("axios");
 
 const stripe = require("stripe")(STRIPE_SECRET_KEY);
 module.exports = async (app, channel) => {
@@ -122,7 +131,7 @@ module.exports = async (app, channel) => {
   app.post(`/api/orders`, async (req, res) => {
     try {
       // use the cart information passed from the front-end to calculate the order amount detals
-      console.log( "nono: " +req.body);
+      console.log("nono: " + req.body);
       const { jsonResponse, httpStatusCode } = await createOrder(req.body);
       res.status(httpStatusCode).json(jsonResponse);
       console.log(jsonResponse);
@@ -145,66 +154,143 @@ module.exports = async (app, channel) => {
     }
   });
 
+  // Image storage
+  const storage = multer.diskStorage({
+    destination: "./upload/images/",
+    filename: (req, file, cb) => {
+      cb(null, file.name + "_" + Date.now() + path.extname(file.originalname));
+    },
+  });
+
+  const upload = multer({
+    storage: storage,
+  });
+
+  // Creating Upload Endpoint for images
+  app.use("/images", express.static("upload/images"));
+
+  app.post("/upload", upload.single("product"), (req, res) => {
+    res.json({
+      success: 1,
+      image_url: `/product/images/${req.file.filename}`,
+    });
+  });
+
+  // Function to download image from URL
+  async function downloadImage(imageUrl) {
+    const response = await fetch(imageUrl);
+    const buffer = await response.buffer();
+    const fileName = Date.now() + path.extname(imageUrl);
+    const filePath = path.join(__dirname, "upload/images", fileName);
+
+    // Save image to local storage using fs
+    fs.writeFileSync(filePath, buffer);
+    return filePath.replace("upload", "images"); // Returning relative path for web access
+  }
+
   // Stripe
   app.post("/create-checkout-session", async (req, res) => {
-    const {order} = req.body;
-    console.log(order);
-    const productsID = Object.keys(order.products);
-    console.log("productsID: " + productsID);
-    for (const prodcutID of productsID) {
-    const cartItem = await fetch(`${PRODUCT_SERVICE_URL}/product/${productsID}`, {
+    try {
+      const { order } = req.body;
+      console.log(order);
+      const productsID = Object.keys(order.products);
+      console.log("productsID: " + productsID);
+
+      const cartItems = await Promise.all(
+        productsID.map(async (productID) => {
+          const response = await fetch(
+            `${PRODUCT_SERVICE_URL}/product/${productID}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          const cartItem = await response.json();
+          return cartItem;
+        })
+      );
+      console.log(cartItems);
+
+      const lineItems = []; // Định nghĩa mảng lineItems ngoài vòng lặp
+
+      // Xử lý các sản phẩm trong giỏ hàng
+      for (const product of cartItems) {
+        // Tạo đường dẫn ảnh cho mỗi sản phẩm
+        const imageUrl = `${PRODUCT_SERVICE_URL}${product.image.replace(
+          "product/",
+          ""
+        )}`;
+        console.log(imageUrl);
+
+        // Thêm sản phẩm vào lineItems
+        lineItems.push({
+          price_data: {
+            currency: "usd",
+            product_data: {
+              name: product.name,
+              images: [imageUrl], // Dùng mảng hình ảnh
+            },
+            unit_amount: Math.round(product.price),
+          },
+          quantity: order.products[product.id], // Lấy số lượng từ đơn hàng
+        });
+      }
+
+      console.log(lineItems);
+
+      // Tạo đơn hàng trong hệ thống
+      const AddOrder = await fetch(`${ORDER_SERVICE_URL}/order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": req.headers["auth-token"],
+        },
+        body: JSON.stringify({
+          status: "completed",
+          products: order.products,
+          total: order.total,
+        }),
+      }).then((response) => response.json());
+      console.log(AddOrder);
+
+      // Clear cart after order
+    await fetch(`${USER_SERVICE_URL}/cart`, {
       method: "POST",
       headers: {
+        Accept: "application/form-data",
+        "auth-token": req.headers["auth-token"],
         "Content-Type": "application/json",
       },
-    }).then((response) => response.json());
-    console.log(cartItem);
-    const product = cartItem;
-    console.log(product);
-    const imageUrl = `${PRODUCT_SERVICE_URL}${product.image.replace('product/', '')}`;
-    const lineItems = [{
-      price_data: {
-        currency: "usd",
-        product_data: [{
-          name: product.name,
-          images: [imageUrl],
-        }],
-        unit_amount: Math.round(product.price),
-      },
-      quantity: order.products[product.id],
-  }];
-  
+      body: JSON.stringify({}),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
 
-  console.log(lineItems);
-  const AddOrder = await fetch(`${ORDER_SERVICE_URL}/order`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "auth-token": req.headers["auth-token"],
-    },
-    body: JSON.stringify({
-      status: "pending",
-      products: order.products,
-      total: order.total,
-    }),
-  }).then((response) => response.json());
-  console.log(AddOrder);
+      // Tạo session checkout với Stripe
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        line_items: lineItems,
+        mode: "payment",
+        success_url: `http://localhost:3000/success`,
+        cancel_url: `http://localhost:3000`,
+      });
 
+      console.log(session);
 
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: lineItems,
-      mode: "payment",
-      success_url: `http://localhost:3000/success`,
-      cancel_url: `http://localhost:3000`,
-    });
-
-    console.log(session);
-
-    res.json({ id: session.id });
-  }
-});
-
+      // Gửi phản hồi một lần duy nhất
+      return res.json({ id: session.id });
+    } catch (err) {
+      console.error(err);
+      return res
+        .status(500)
+        .json({
+          error: "An error occurred while creating the checkout session.",
+        });
+    }
+  });
   // serve index.html
   app.get("/", (req, res) => {
     res.sendFile(path.resolve("./client/checkout.html"));

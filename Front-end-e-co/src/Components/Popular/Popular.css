@@ -4,10 +4,11 @@
   align-items: center;
   gap: 10px;
   height: auto;
-  background: #000000;
+  padding: 50px 0;
+  background: #ffffff;
 }
 .popular h1 {
-  color: #ffffff;
+  color: #232323;
   font-size: 50px;
   font-weight: 600;
 }

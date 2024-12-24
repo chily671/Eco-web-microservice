@@ -42,7 +42,7 @@ const ProductDetail = (props) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className=" bg-gradient-to-br from-blue-50 to-purple-50 pt-20 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
         <div className="md:flex">
           <div className="md:flex-shrink-0 md:w-1/2">

@@ -1,9 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
- import VietnamData from "./ProvinceList";
+import VietnamData from "./ProvinceList";
 import { ShopContext } from "../../Context/ShopContext";
 import CartItemUnit from "../CartItems/CartItemUnit";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { loadStripe } from "@stripe/stripe-js";
+import "./Checkout.css";
 const serverURL = "http://localhost:5009";
 
 const CheckoutPage = () => {
@@ -161,8 +162,12 @@ const CheckoutPage = () => {
   }, [orderDetail]);
 
   return (
-    <div className="flex flex-col flex-grow items-center h-screen bg-gray-100">
-      <div className="add-product">
+    <div className="flex flex-grow  bg-gray-100 py-14 pl-14">
+      <div className="flex flex-col gap-2 items-center w-1/2 p-4 bg-white rounded-lg shadow-lg">
+        <h3 className="text-xl font-semibold text-gray-800">
+          Personal Information
+        </h3>
+        <hr className="my-2 " />
         <div className="addproduct-itemfield">
           <p>Full name</p>
           <input
@@ -261,14 +266,14 @@ const CheckoutPage = () => {
           onClick={() => {
             AddOrder();
           }}
-          className="addproduct-btn"
+          className="mt-5 w-full h-10 rounded-md bg-blue-600 cursor-pointer hover:bg-blue-700 text-white font-medium"
         >
           Complete Order
         </button>
 
         <button
           onClick={() => makeStripePayment()}
-          className="px-6 py-2 mt-4 text-white bg-blue-500 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          className="stripe-btn"
         >
           Pay with Stripe
         </button>
@@ -366,14 +371,20 @@ const CheckoutPage = () => {
         </PayPalScriptProvider>
         <Message content={message} />
       </div>
-      <div className="Items-cart">
-        {all_product.map((e, index) => {
-          if (e.id in cartItems) {
-            return (
-              <CartItemUnit key={index} props={e} />
-            );
-          } else return null;
-        })}
+      <div className="flex-1 ">
+        <div className="flex flex-row w-full h-full justify-center p-4 bg-white rounded-lg shadow-lg">
+          <div className=" flex flex-col items-center">
+            <h3 className="text-xl font-semibold text-gray-800">
+              Cart Item
+            </h3>
+            <hr className="my-2 " />
+            {all_product.map((e, index) => {
+              if (e.id in cartItems) {
+                return <CartItemUnit key={index} props={e} />;
+              } else return null;
+            })}
+          </div>
+        </div>
       </div>
     </div>
   );
