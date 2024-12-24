@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: products-service
-        image: lykieuchi/ecommerce-web-product-service:3.0
+        image: lykieuchi/ecommerce-web-product-service:4.0
         ports:
         - containerPort: 5000
         env:

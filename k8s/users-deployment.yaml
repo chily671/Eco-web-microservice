@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: users-service
-        image: lykieuchi/ecommerce-web-user-service:3.0
+        image: lykieuchi/ecommerce-web-user-service:4.0
         ports:
         - containerPort: 5001
         env:
