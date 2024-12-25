@@ -40,5 +40,4 @@ jobs:
     steps:
       - name: Start port forwarding
         run: |
-          sudo -E nohup kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > ~/kubectl-portforward.log 2>&1 &
-
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S -E nohup kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > ~/kubectl-portforward.log 2>&1 &
