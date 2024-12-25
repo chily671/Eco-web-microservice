@@ -39,5 +39,8 @@ jobs:
     runs-on: self-hosted
     steps:
       - name: Start port forwarding
+        env:
+          SUDO_PASSWORD: ${{ secrets.SUDO_PASSWORD }}
         run: |
-          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S -n -E nohup kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > ~/kubectl-portforward.log 2>&1 &
+          echo "$SUDO_PASSWORD"
+          echo "$SUDO_PASSWORD" | sudo -S kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > ~/kubectl-portforward.log 2>&1 &
