@@ -38,10 +38,7 @@ jobs:
     needs: check
     runs-on: self-hosted
     steps:
-      - name: Allocate TTY  
-        run: |
-          exec < /dev/tty
       - name: Start port forwarding
         run: |
-          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S nohup kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > kubectl-portforward.log 2>&1 &
+          sudo -E nohup kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > ~/kubectl-portforward.log 2>&1 &
 
