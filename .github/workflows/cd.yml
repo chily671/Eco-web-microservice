@@ -11,17 +11,20 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Apply Kubernetes configurations
-        run: |
-          kubectl apply -f k8s/namespace.yaml
+    - name: Check and apply Kubernetes configurations
+      run: |
+        if ! kubectl get namespace eco-web-microservices >/dev/null 2>&1; then
           kubectl apply -f k8s/nginx-configmap.yaml
-          kubectl apply -f k8s/secret.yaml
+          kubectl apply -f k8s/secret.yaml 
           kubectl apply -f k8s/users-deployment.yaml
           kubectl apply -f k8s/products-deployment.yaml
           kubectl apply -f k8s/
+        else
+          echo "Namespace eco-web-microservices already exists, skipping configuration apply"
+        fi
   check:
     needs: deploy
     strategy:
@@ -37,5 +40,5 @@ jobs:
     steps:
       - name: Start port forwarding
         run: |
-          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S -E kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > ~/kubectl-portforward.log 2>&1
+          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S nohup sudo -E kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > kubectl-portforward.log 2>&1 &
 
