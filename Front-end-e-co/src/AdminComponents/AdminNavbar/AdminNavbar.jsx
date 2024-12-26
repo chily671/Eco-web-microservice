@@ -1,6 +1,6 @@
 import React from 'react'
 import './AdminNavbar.css'
-import navlogo from '../Assets/nav-logo.svg'
+import navlogo from '../Assets/logo.png'
 import navProfile from '../Assets/nav-profile.svg'
 import { Link } from 'react-router-dom'
 import { AuthenticationContext } from '../../Context/AuthenticationContext'

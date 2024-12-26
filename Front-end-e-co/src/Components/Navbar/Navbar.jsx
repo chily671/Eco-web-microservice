@@ -13,6 +13,7 @@ import { ShopContext } from "../../Context/ShopContext";
 import { AuthenticationContext } from "../../Context/AuthenticationContext";
 import { cn } from "../../lib/utils";
 import { Link } from "react-router-dom";
+import navlogo from "../Assets/image.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -110,11 +111,8 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0">
-              <img
-                className="h-8 w-auto"
-                src="images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3"
-                alt="Watch Store Logo"
-              />
+              <img className="h-16 w-auto" src={navlogo} />
+
             </div>
             <div className="hidden md:block ml-10">
               <div className="flex items-baseline space-x-4">
@@ -355,14 +353,14 @@ const Navbar = () => {
               to="/shop/men"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
-            Men's Watches
+              Men's Watches
             </Link>
 
             <Link
               to="/shop/women"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
             >
-            Women's Watches
+              Women's Watches
             </Link>
             <Link to="/">
               <div className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-black hover:bg-gray-50">

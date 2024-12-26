@@ -31,11 +31,11 @@ jobs:
     steps:
       - name: Check ${{ matrix.service }} deployment
         run: kubectl rollout status deployment/${{ matrix.service }}-service -n eco-web-microservices
-  port-forward:
-    needs: check
-    runs-on: self-hosted
-    steps:
-      - name: Start port forwarding
-        run: |
-          echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S -E kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > ~/kubectl-portforward.log 2>&1
+  # port-forward:
+  #   needs: check
+  #   runs-on: self-hosted
+  #   steps:
+  #     - name: Start port forwarding
+  #       run: |
+  #         echo "${{ secrets.SUDO_PASSWORD }}" | sudo -S -E kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0 > ~/kubectl-portforward.log 2>&1
 

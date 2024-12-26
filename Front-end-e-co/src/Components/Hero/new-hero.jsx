@@ -13,9 +13,9 @@ const ProductionSlider = () => {
     {
       id: 1,
       image: img1,
-      title: "Advanced Manufacturing Facility",
+      title: "Designed for Excellence",
       description:
-        "State-of-the-art production line featuring automated assembly systems",
+        "Crafted with meticulous attention to detail, our watches reflect sophistication and functionality, perfect for both work and leisure",
     },
     {
       id: 2,
@@ -63,7 +63,7 @@ const ProductionSlider = () => {
   }, [nextSlide]);
 
   return (
-    <div className="relative w-full mx-auto h-[600px] overflow-hidden">
+    <div className="relative w-full mx-auto h-[700px] overflow-hidden">
       <div className="relative h-full">
         {productionItems.map((item, index) => (
           <div
