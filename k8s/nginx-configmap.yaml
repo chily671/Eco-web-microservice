@@ -10,7 +10,7 @@ data:
     http {
         server {
             listen 80;
-            server_name chily.io.vn;
+            server_name ecommerce.chily.io.vn;
             charset utf-8;
 
             location /user/ {
