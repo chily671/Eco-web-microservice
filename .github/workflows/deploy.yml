@@ -15,8 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          ref: add-automation-build-push
+        # with:
+        #   ref: add-automation-build-push
 
       - name: Helm install application
         run: |
