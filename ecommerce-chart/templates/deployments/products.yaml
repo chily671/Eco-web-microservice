@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.products.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.products.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.products.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.products.name }}
+    spec:
+      containers:
+      - name: {{ .Values.products.name }}
+        image: "{{ .Values.products.image.repository }}:{{ .Values.tag }}"
+        ports:
+        - containerPort: {{ .Values.products.port }}
+        env:
+        - name: PORT
+          value: "{{ .Values.products.port }}"
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-uri-secret
+              key: PRODUCT_MONGODB_URI

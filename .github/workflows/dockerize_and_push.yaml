@@ -1,0 +1,169 @@
+name: Dockerize container and push to DockerHub
+
+on:
+  push:
+    paths:
+      - '**/dockerize_and_push.yaml'
+
+env:
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_REPO: lykieuchi
+  SHA_TAG: ${{ github.sha }}
+
+jobs:
+  dockerize-frontend:
+    runs-on: perf-worker-1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Build and Push Frontend
+        run: |
+          cd Front-end-e-co
+          docker build -t ${{ env.DOCKER_REPO }}/frontend:${{ env.SHA_TAG }} .
+          docker push ${{ env.DOCKER_REPO }}/frontend:${{ env.SHA_TAG }}
+
+  dockerize-product-service:
+    runs-on: perf-worker-2
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Build and Push Frontend
+        run: |
+          cd Products-service
+          docker build -t ${{ env.DOCKER_REPO }}/product-service:${{ env.SHA_TAG }} .
+          docker push ${{ env.DOCKER_REPO }}/product-service:${{ env.SHA_TAG }}
+
+  # dockerize-chat-service:
+  #   runs-on: perf-worker-2
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ env.DOCKER_USERNAME }}
+  #         password: ${{ env.DOCKER_PASSWORD }}
+  #     - name: Build and Push Chat Service
+  #       run: |
+  #         cd Chat-Service
+  #         docker build -t ${{ env.DOCKER_REPO }}/chat-service:${{ env.SHA_TAG }} .
+  #         docker push ${{ env.DOCKER_REPO }}/chat-service:${{ env.SHA_TAG }}
+
+  dockerize-order-service:
+    runs-on: perf-worker-3
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+      - name: Build and Push Order Service
+        run: |
+          cd Order-service
+          docker build -t ${{ env.DOCKER_REPO }}/order-service:${{ env.SHA_TAG }} .
+          docker push ${{ env.DOCKER_REPO }}/order-service:${{ env.SHA_TAG }}
+
+  # dockerize-pay-service:
+  #   runs-on: perf-worker-4
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ env.DOCKER_USERNAME }}
+  #         password: ${{ env.DOCKER_PASSWORD }}
+  #     - name: Build and Push Pay Service
+  #       run: |
+  #         cd Pay-service
+  #         docker build -t ${{ env.DOCKER_REPO }}/pay-service:${{ env.SHA_TAG }} .
+  #         docker push ${{ env.DOCKER_REPO }}/pay-service:${{ env.SHA_TAG }}
+
+  # dockerize-rating-service:
+  #   runs-on: perf-worker-5
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ env.DOCKER_USERNAME }}
+  #         password: ${{ env.DOCKER_PASSWORD }}
+  #     - name: Build and Push Rating Service
+  #       run: |
+  #         cd Rating-service
+  #         docker build -t ${{ env.DOCKER_REPO }}/rating-service:${{ env.SHA_TAG }} .
+  #         docker push ${{ env.DOCKER_REPO }}/rating-service:${{ env.SHA_TAG }}
+  dockerize-gateway:
+    runs-on: perf-worker-5
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+      - name: Build and Push Rating Service
+        run: |
+          cd gateway
+          docker build -t ${{ env.DOCKER_REPO }}/gateway-service:${{ env.SHA_TAG }} .
+          docker push ${{ env.DOCKER_REPO }}/gateway-service:${{ env.SHA_TAG }}
+
+  # dockerize-recommender-system-service:
+  #   runs-on: perf-worker-6
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ env.DOCKER_USERNAME }}
+  #         password: ${{ env.DOCKER_PASSWORD }}
+  #     - name: Build and Push Recommender Service
+  #       run: |
+  #         cd Recommender-System-Service
+  #         docker build -t ${{ env.DOCKER_REPO }}/recommender-service:${{ env.SHA_TAG }} .
+  #         docker push ${{ env.DOCKER_REPO }}/recommender-service:${{ env.SHA_TAG }}
+
+  dockerize-users-service:
+    runs-on: perf-worker-6
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+      - name: Build and Push Users Service
+        run: |
+          cd Users-Service
+          docker build -t ${{ env.DOCKER_REPO }}/users-service:${{ env.SHA_TAG }} .
+          docker push ${{ env.DOCKER_REPO }}/users-service:${{ env.SHA_TAG }}
+
+
+  trigger-deployment:
+    needs: [
+      dockerize-frontend,
+      dockerize-product-service,
+      dockerize-order-service,
+      dockerize-gateway,
+      dockerize-users-service
+    ]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Trigger deployment workflow
+      uses: benc-uk/workflow-dispatch@v1
+      with:
+        workflow: deploy.yml
+        token: ${{ secrets.PAT_TOKEN }}
+        inputs: |
+          {
+            "tag": "${{ env.SHA_TAG }}"
+          }
+
+        

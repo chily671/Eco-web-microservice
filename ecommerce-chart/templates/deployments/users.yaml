@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.users.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.users.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.users.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.users.name }}
+    spec:
+      containers:
+      - name: {{ .Values.users.name }}
+        image: "{{ .Values.users.image.repository }}:{{ .Values.tag }}"
+        ports:
+        - containerPort: {{ .Values.users.port }}
+        env:
+        - name: PORT
+          value: "{{ .Values.users.port }}"
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-uri-secret
+              key: USER_MONGODB_URI
