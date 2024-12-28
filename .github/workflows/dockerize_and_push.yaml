@@ -166,7 +166,6 @@ jobs:
         run: |
           ls
           git branch
-          cd Eco-web-microservice
           helm install ecommerce ./ecommerce-chart \
             -f ./ecommerce-chart/values.yaml \
             -set tag=${{ env.SHA_TAG }}
