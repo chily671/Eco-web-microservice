@@ -22,7 +22,7 @@ jobs:
         run: |
           ls
           git branch
-          cd Eco-web-microservice
-          helm install my-release . \
+          echo "-----------------------------------"
+          helm install ecommerce ./ecommerce-chart \
             -f values.yaml \
             --set tag=${{ github.event.inputs.tag }}
