@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const proxy = require("express-http-proxy");
+const dotenv = require("dotenv");
 // Cấu hình cho WebSocket
 const httpProxy = require("http-proxy");
 const http = require("http");
@@ -10,7 +11,7 @@ const server = http.createServer(app);
 
 // Tạo proxy server để chuyển tiếp các yêu cầu WebSocket
 const wsProxy = httpProxy.createProxyServer({
-  target: "http://localhost:5008", // Service WebSocket backend chạy ở cổng 5008
+  target: process.env.CHAT_SERVICE, // Service WebSocket backend chạy ở cổng 5008
   ws: true, // Kích hoạt hỗ trợ WebSocket
 });
 
@@ -20,11 +21,11 @@ app.use(express.json());
 
 
 // Chuyển tiếp các yêu cầu HTTP thông thường qua proxy
-app.use("/user", proxy("http://localhost:5001"));
-app.use("/order", proxy("http://localhost:5002"));
-app.use("/product", proxy("http://localhost:5000", { parseReqBody: false }));
-app.use("/chat", proxy("http://localhost:5008")); // Chuyển tiếp các yêu cầu HTTP cho chat
-app.use("/pay", proxy("http://localhost:5009")); // Chuyển tiếp các yêu cầu HTTP cho api
+app.use("/user", proxy(process.env.USER_SERVICE));
+app.use("/order", proxy(process.env.ORDER_SERVICE));
+app.use("/product", proxy(process.env.PRODUCT_SERVICE, { parseReqBody: false }));
+app.use("/chat", proxy(process.env.CHAT_SERVICE)); // Chuyển tiếp các yêu cầu HTTP cho chat
+app.use("/pay", proxy(process.env.PAYMENT_SERVICE)); // Chuyển tiếp các yêu cầu HTTP cho api
 // Chuyển tiếp các yêu cầu HTTP thông thường
 app.use("/chat", (req, res) => {
   wsProxy.web(req, res); // Chuyển tiếp yêu cầu HTTP đến backend
@@ -38,6 +39,6 @@ server.on("upgrade", (req, socket, head) => {
 });
 
 // Lắng nghe các yêu cầu qua cổng 5555
-server.listen(5555, () => {
+server.listen(process.env.PORT, () => {
   console.log("Gateway is listening on port 5555");
 });
