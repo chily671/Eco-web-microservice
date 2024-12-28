@@ -1,19 +1,15 @@
 name: Dockerize container and push to DockerHub
 
 on:
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Docker image tag'
-        required: true
-        type: string
-        default: 'latest'
+  push:
+  branches:
+    - add-automation-build-push
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
   DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   DOCKER_REPO: lykieuchi
-  SHA_TAG: ${{ github.event.inputs.tag }}
+  SHA_TAG: ${{ github.sha }}
 
 jobs:
   dockerize-frontend:
