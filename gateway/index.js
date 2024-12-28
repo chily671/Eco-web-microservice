@@ -21,11 +21,11 @@ app.use(express.json());
 
 
 // Chuyển tiếp các yêu cầu HTTP thông thường qua proxy
-app.use("/user", proxy(process.env.USER_SERVICE));
-app.use("/order", proxy(process.env.ORDER_SERVICE));
-app.use("/product", proxy(process.env.PRODUCT_SERVICE, { parseReqBody: false }));
-app.use("/chat", proxy(process.env.CHAT_SERVICE)); // Chuyển tiếp các yêu cầu HTTP cho chat
-app.use("/pay", proxy(process.env.PAYMENT_SERVICE)); // Chuyển tiếp các yêu cầu HTTP cho api
+app.use("/user", proxy(process.env.USER_SERVICE_URL));
+app.use("/order", proxy(process.env.ORDER_SERVICE_URL));
+app.use("/product", proxy(process.env.PRODUCT_SERVICE_URL, { parseReqBody: false }));
+app.use("/chat", proxy(process.env.CHAT_SERVICE_URL)); // Chuyển tiếp các yêu cầu HTTP cho chat
+app.use("/pay", proxy(process.env.PAY_SERVICE_URL)); // Chuyển tiếp các yêu cầu HTTP cho api
 // Chuyển tiếp các yêu cầu HTTP thông thường
 app.use("/chat", (req, res) => {
   wsProxy.web(req, res); // Chuyển tiếp yêu cầu HTTP đến backend

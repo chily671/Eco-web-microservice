@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.gateway.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.gateway.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.gateway.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.gateway.name }}
+    spec:
+      containers:
+      - name: {{ .Values.gateway.name }}
+        image: "{{ .Values.gateway.image.repository }}:{{ .Values.tag }}"
+        ports:
+        - containerPort: {{ .Values.gateway.port }}
+        envFrom:
+        - configMapRef:
+            name: app-config
+        env:
+        - name: PORT
+          value: "{{ .Values.gateway.port }}"
+        

@@ -1,10 +1,5 @@
 const OrderService = require("../services/order-service");
-const { PublishCustomerEvent, SubscribeMessage } = require("../utils");
-const { USER_SERVICE } = require("../config");
-const { PublishMessage } = require("../utils");
-const { application } = require("express");
 const jwt = require("jsonwebtoken");
-const { APP_SECRET } = require("../config");
 const uuid = require("uuid");
 
 function generateID() {
@@ -14,8 +9,6 @@ function generateID() {
 module.exports = (app, channel) => {
   const service = new OrderService();
 
-  // Subscribe to the channel
-  SubscribeMessage(channel, service);
 
   // Creating middleware for user authentication
   const fetchUser = async (req, res, next) => {
