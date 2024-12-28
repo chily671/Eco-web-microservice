@@ -164,7 +164,7 @@ jobs:
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: 'deploy.yml',
+              workflow_id: '.github/workflows/deploy.yml',
               ref: 'add-automation-build-push',
               inputs: {
                 tag: '${{ env.SHA_TAG }}'
