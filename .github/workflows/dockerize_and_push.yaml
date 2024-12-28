@@ -160,6 +160,7 @@ jobs:
       uses: benc-uk/workflow-dispatch@v1
       with:
         workflow: deploy.yml
+        token: ${{ secrets.PAT_TOKEN }}
         inputs: |
           {
             "tag": "${{ env.SHA_TAG }}"
