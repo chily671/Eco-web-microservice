@@ -11,6 +11,8 @@ const fs = require("fs");
 module.exports = async (app, channel) => {
   const service = new ProductService();
 
+  
+
   // Creating middleware for user authentication
   const fetchUser = async (req, res, next) => {
     const token = req.header("auth-token");
@@ -39,6 +41,10 @@ module.exports = async (app, channel) => {
 
   const upload = multer({
     storage: storage,
+  });
+
+  app.get("/", (req, res) => {
+    res.status(200).json({ message: "Hello from Products-Service" });
   });
 
   // Creating Upload Endpoint for images
