@@ -23,6 +23,6 @@ jobs:
           ls
           git branch
           echo "-----------------------------------"
-          helm install ecommerce ./ecommerce-chart \
+          helm upgrade --install ecommerce ./ecommerce-chart \
             -f ./ecommerce-chart/values.yaml \
             --set tag=${{ github.event.inputs.tag }}
