@@ -1,0 +1,28 @@
+# .github/workflows/deploy.yml
+name: Deploy to K8s
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Image tag to deploy'
+        required: true
+        type: string
+
+jobs:
+  deploy-to-k8s-cluster:
+    runs-on: k8s-master-node
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: add-automation-build-push
+
+      - name: Helm install application
+        run: |
+          ls
+          git branch
+          cd Eco-web-microservice
+          helm install my-release . \
+            -f values.yaml \
+            --set tag=${{ github.event.inputs.tag }}
