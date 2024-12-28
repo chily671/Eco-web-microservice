@@ -28,4 +28,4 @@ spec:
           valueFrom:
             secretKeyRef:
               name: mongodb-uri-secret
-              key: USER_MONGODB_URIgatw
+              key: USER_MONGODB_URI
