@@ -151,7 +151,7 @@ jobs:
       dockerize-frontend,
       dockerize-product-service,
       dockerize-order-service,
-      ddockerize-gateway,
+      dockerize-gateway,
       dockerize-users-service
     ]
     runs-on: k8s-master-node
