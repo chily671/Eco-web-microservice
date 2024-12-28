@@ -2,8 +2,12 @@ name: Dockerize container and push to DockerHub
 
 on:
   push:
+    branches:
+      - main
     paths:
+      - '**/Dockerfile'
       - '**/dockerize_and_push.yaml'
+      - 'ecommerce-chart'
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
