@@ -240,10 +240,16 @@ class UserRepository {
     }
   }
 
-  async updateUser(data) {
+  async updateUser(userID, { username, email }) {
     try {
-      const response = await user.findOneAndUpdate(data);
-      return { response };
+      const response = await UserModel.findByIdAndUpdate(userID, {
+        username,
+        email,
+      });
+      return {
+        success: true,
+        message: "Updated Successfully",
+      };
     } catch (error) {
       return error;
     }

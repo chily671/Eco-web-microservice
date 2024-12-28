@@ -203,20 +203,29 @@ class UserService {
     }
   }
 
-  async UpdateUser(req, res) {
+  async UpdateUser(userId, { username, email, phone }) {
     try {
-      const { email } = req.user;
-      const { password } = req.body;
-      const salt = await GenerateSalt();
-      const hashedPassword = await GeneratePassword(password, salt);
-      await User.findOneAndUpdate(
-        { email },
-        { password: hashedPassword, salt }
-      );
-      return res.status(200).json({ message: "User Updated" });
+      const User = await this.repository.updateUser(userId, { username, email, phone });
+      return User;
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  async ChangePassword(userId, {oldpassword, newpassword}) {
+    try {
+      const isPassCompare = await ComparePassword(oldpassword, User.password);
+      if (!isPassCompare) {
+        return { success: false, message: "Invalid Password" };
+      }
+      const salt = await GenerateSalt();
+      const hashedPassword = await GeneratePassword(newpassword, salt);
+      const updated = await this.repository.updatePassword(userId, hashedPassword);
+      return updated;
+    } catch (error) {
+      console.log(error);
+      return { success: false, message: "Internal Server Error" };
     }
   }
 }
