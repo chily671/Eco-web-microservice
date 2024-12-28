@@ -2,8 +2,8 @@ name: Dockerize container and push to DockerHub
 
 on:
   push:
-  branches:
-    - add-automation-build-push
+    branches:
+      - add-automation-build-push
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
