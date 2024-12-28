@@ -159,17 +159,36 @@ jobs:
       - name: Trigger Deployment Workflow
         uses: actions/github-script@v6
         with:
-          github-token: ${{ secrets.PAT_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
+            const workflows = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            
+            console.log('Available workflows:');
+            workflows.data.workflows.forEach(w => {
+              console.log(`- ${w.name} (ID: ${w.id}, Path: ${w.path})`);
+            });
+            
+            const deployWorkflow = workflows.data.workflows.find(w => w.path.endsWith('deploy.yml'));
+            
+            if (!deployWorkflow) {
+              console.log('Available workflow paths:');
+              workflows.data.workflows.map(w => w.path).forEach(p => console.log(`- ${p}`));
+              throw new Error('Deploy workflow not found. Please check the workflow file name and location.');
+            }
+            
+            // Proceed with the dispatch
             await github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: '.github/workflows/deploy.yml',
+              workflow_id: deployWorkflow.id,
               ref: 'add-automation-build-push',
               inputs: {
-                tag: '${{ env.SHA_TAG }}'
+                tag: '1dc40efe9573c96396805305a9197804ce51f0fb'
               }
-            })
+            });
 
 
           
