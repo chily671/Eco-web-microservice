@@ -30,10 +30,6 @@ jobs:
           docker build -t ${{ env.DOCKER_REPO }}/frontend:${{ env.SHA_TAG }} .
           docker push ${{ env.DOCKER_REPO }}/frontend:${{ env.SHA_TAG }}
 
-      - name: Clean up docker images
-        run: |
-          docker system prune -a -f
-
   dockerize-product-service:
     runs-on: perf-worker-2
     steps:
@@ -51,10 +47,6 @@ jobs:
           cd Products-service
           docker build -t ${{ env.DOCKER_REPO }}/product-service:${{ env.SHA_TAG }} .
           docker push ${{ env.DOCKER_REPO }}/product-service:${{ env.SHA_TAG }}
-
-      - name: Clean up docker images
-        run: |
-          docker system prune -a -f
 
   # dockerize-chat-service:
   #   runs-on: perf-worker-2
@@ -83,10 +75,6 @@ jobs:
           cd Order-service
           docker build -t ${{ env.DOCKER_REPO }}/order-service:${{ env.SHA_TAG }} .
           docker push ${{ env.DOCKER_REPO }}/order-service:${{ env.SHA_TAG }}
-
-      - name: Clean up docker images
-        run: |
-          docker system prune -a -f
 
   # dockerize-pay-service:
   #   runs-on: perf-worker-4
@@ -129,10 +117,6 @@ jobs:
           docker build -t ${{ env.DOCKER_REPO }}/gateway-service:${{ env.SHA_TAG }} .
           docker push ${{ env.DOCKER_REPO }}/gateway-service:${{ env.SHA_TAG }}
 
-      - name: Clean up docker images
-        run: |
-          docker system prune -a -f
-
   # dockerize-recommender-system-service:
   #   runs-on: perf-worker-6
   #   steps:
@@ -160,10 +144,6 @@ jobs:
           cd Users-Service
           docker build -t ${{ env.DOCKER_REPO }}/users-service:${{ env.SHA_TAG }} .
           docker push ${{ env.DOCKER_REPO }}/users-service:${{ env.SHA_TAG }}
-
-      - name: Clean up docker images
-        run: |
-          docker system prune -a -f
 
 
   trigger-deployment:
