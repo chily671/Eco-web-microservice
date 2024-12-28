@@ -1,4 +1,5 @@
 const express = require('express');
+const { PORT } = require('./src/config');
 
 const app = express();
 
@@ -10,6 +11,6 @@ app.use('/', (req,res,next) => {
 })
 
 
-app.listen(5000, () => {
+app.listen(PORT, () => {
     console.log('Products is Listening to Port 5000')
 })
