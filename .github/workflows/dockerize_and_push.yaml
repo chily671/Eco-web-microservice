@@ -168,7 +168,7 @@ jobs:
           git branch
           helm install ecommerce ./ecommerce-chart \
             -f ./ecommerce-chart/values.yaml \
-            -set tag=${{ env.SHA_TAG }}
+            --set tag=${{ env.SHA_TAG }}
           helm status ecommerce
 
 
