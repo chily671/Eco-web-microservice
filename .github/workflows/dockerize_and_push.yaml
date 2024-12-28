@@ -3,7 +3,7 @@ name: Dockerize container and push to DockerHub
 on:
   push:
     paths:
-      - 'dockerize_and_push.yaml'
+      - '**/dockerize_and_push.yaml'
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
