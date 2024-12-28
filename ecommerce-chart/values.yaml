@@ -1,0 +1,53 @@
+namespace: eco-web-microservices
+
+ingress:
+  name: ecommerce-ingress
+  className: nginx
+  annotations:
+    rewriteTarget: /$2
+    useRegex: "true"
+  frontendPath: /()(.*)
+  pathType: ImplementationSpecific
+
+configMap:
+  searchServiceUrl: "http://search-service:1234"
+  rsServiceUrl: "http://rs-service:1357"
+  productServiceUrl: "http://product-service:5000"
+  userServiceUrl: "http://users-service:5001"
+  orderServiceUrl: "http://orders-service:5002"
+
+mongodb:
+  secrets:
+    userUri: "bW9uZ29kYitzcnY6Ly8yMDUyMTEzMTpoYXpha2FjaGk2OUBjbHVzdGVyMC5uY2JhbGl5Lm1vbmdvZGIubmV0L1VzZXItV2F0Y2hfc2hvcD9yZXRyeVdyaXRlcz10cnVlJnc9bWFqb3JpdHkmYXBwTmFtZT1DbHVzdGVyMA=="
+    productUri: "bW9uZ29kYitzcnY6Ly8yMDUyMTEzMTpoYXpha2FjaGk2OUBjbHVzdGVyMC5uY2JhbGl5Lm1vbmdvZGIubmV0L1dhdGNoX3Nob3A/cmV0cnlXcml0ZXM9dHJ1ZSZ3PW1ham9yaXR5JmFwcE5hbWU9Q2x1c3RlcjA="
+    orderUri: "bW9uZ29kYitzcnY6Ly8yMDUyMTEzMTpoYXpha2FjaGk2OUBjbHVzdGVyMC5uY2JhbGl5Lm1vbmdvZGIubmV0L09yZGVyLVdhdGNoX3Nob3A/cmV0cnlXcml0ZXM9dHJ1ZSZ3PW1ham9yaXR5JmFwcE5hbWU9Q2x1c3RlcjA="
+
+tag: 4e11591611a6a6a9666295a59f3725ed47f957b9
+
+frontend:
+  name: frontend
+  replicas: 4
+  image:
+    repository: lykieuchi/frontend
+  port: 3000
+
+orders:
+  name: orders-service
+  replicas: 1
+  image:
+    repository: lykieuchi/order-service
+  port: 5002
+
+products:
+  name: products-service
+  replicas: 1
+  image:
+    repository: lykieuchi/product-service
+  port: 5000
+
+users:
+  name: users-service
+  replicas: 1
+  image:
+    repository: lykieuchi/order-service
+  port: 5001

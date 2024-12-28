@@ -2,8 +2,8 @@ name: Dockerize container and push to DockerHub
 
 on:
   push:
-    branches:
-      - add-automation-build-push
+    paths:
+      - 'dockerize_and_push.yaml'
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -146,3 +146,31 @@ jobs:
           docker push ${{ env.DOCKER_REPO }}/users-service:${{ env.SHA_TAG }}
 
 
+  deploy-to-k8s-cluster:
+    needs: [
+      dockerize-frontend,
+      dockerize-product-service,
+      dockerize-order-service,
+      ddockerize-gateway,
+      dockerize-users-service
+    ]
+    runs-on: k8s-master-node
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: add-automation-build-push
+        
+
+      - name: Helm install application
+        run: |
+          ls
+          git branch
+          cd Eco-web-microservice
+          helm install ecommerce ./ecommerce-chart \
+            -f ./ecommerce-chart/values.yaml \
+            -set tag=${{ env.SHA_TAG }}
+          helm status ecommerce
+
+
+          
