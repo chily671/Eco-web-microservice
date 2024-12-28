@@ -160,8 +160,6 @@ jobs:
       uses: benc-uk/workflow-dispatch@v1
       with:
         workflow: deploy.yml
-        token: ${{ secrets.GITHUB_TOKEN }}
-        ref: add-automation-build-push
         inputs: |
           {
             "tag": "${{ env.SHA_TAG }}"
