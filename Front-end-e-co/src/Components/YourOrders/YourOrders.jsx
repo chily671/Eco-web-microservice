@@ -81,7 +81,8 @@ const YourOrders = () => {
     );
   }
     return (
-        <div className='yourorders'>
+      
+        <div className='yourorders overflow-auto'>
             <h1 className='mainhead1'>Your Orders</h1>
 
             <table>

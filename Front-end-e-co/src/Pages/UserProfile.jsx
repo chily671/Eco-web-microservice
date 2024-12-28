@@ -21,9 +21,8 @@ const UserProfile = () => {
         <div className="userprofile-left">
           <UserSidebar activepage={activepage} />
         </div>
-        <div className="userprofile-right">
+        <div className="userprofile-right ">
           {activepage === "overview" && <Overview User={User} />}
-          {activepage === "accountsettings" && <AccountSetting />}
           {activepage === "changepassword" && <ChangePassword />}
           {activepage === "yourorders" && <YourOrders />}
           {activepage === "address" && <UserAddress User={User} />}

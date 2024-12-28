@@ -28,7 +28,7 @@ content_matrix = tfidf_vectorizer.fit_transform(content_df['content'])
 content_similarity = linear_kernel(content_matrix, content_matrix)
 
 reader = Reader(rating_scale=(1, 5))
-data = Dataset.load_from_df(data[['user_id', 'Product ID', 'Rating']], reader)
+data = Dataset.load_from_df(data[['User ID', 'Product ID', 'Rating']], reader)
 
 def get_content_based_recommendations(product_id, top_n):
     product_id = str(product_id)

@@ -16,6 +16,12 @@ const UserSchema = new mongoose.Schema({
     type: Object,
     default: {},
   },
+  phone: {
+    type: Number,
+  },
+  address: {
+    type: String,
+  },
   orderData: {
     type: Array,
   },
@@ -30,7 +36,7 @@ const UserSchema = new mongoose.Schema({
       views: { type: Number, default: 0 },
       purchases: { type: Number, default: 0 },
     },
-    default : new Map(),
+    default: new Map(),
   },
   date: {
     type: Date,

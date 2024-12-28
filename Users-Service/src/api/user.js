@@ -240,6 +240,20 @@ module.exports = async (app, channel) => {
     }
   });
 
+  app.put("/changepassword", fetchUser, async (req, res) => {
+    try {
+      const userId = req.user;
+      const { oldpassword, newpassword } = req.body;
+      const updated = await service.ChangePassword(userId.id, {
+        oldpassword,
+        newpassword,
+      });
+      return res.status(200).json(updated);
+    } catch (error) {
+      return res.status(400).json({ message: error.message });
+    }
+  });
+
   app.get("/isadmin", fetchAdmin, async (req, res) => {
     res.json({ isAdmin: true });
   });
@@ -248,6 +262,23 @@ module.exports = async (app, channel) => {
     try {
       const users = await service.GetAllUsers();
       return res.status(200).json(users);
+    } catch (error) {
+      return res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.put("/editinfo", fetchUser, async (req, res) => {
+    try {
+      const userId = req.user;
+      const { username, email, phone } = req.body;
+      console.log("userId:", userId);
+      console.log("username:", username);
+      const updated = await service.UpdateUser(userId.id, {
+        username,
+        email,
+        phone,
+      });
+      return res.status(200).json(updated);
     } catch (error) {
       return res.status(400).json({ message: error.message });
     }

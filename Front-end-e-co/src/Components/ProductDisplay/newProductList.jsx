@@ -11,10 +11,10 @@ const ProductDetail = (props) => {
   const { updateInteraction, addToCart } = useContext(ShopContext);
 
   const renderStars = (product) => {
-    const rating = product.rating;
+    const rating = 4.5;
     const stars = [];
     const fullStars = Math.floor(rating);
-    const hasHalfStar = rating % 1 !== 0;
+    const hasHalfStar = 4.5 % 1 !== 0;
 
     for (let i = 0; i < fullStars; i++) {
       stars.push(
@@ -75,9 +75,7 @@ const ProductDetail = (props) => {
                 >
                   {renderStars(product.rating)}
                 </div>
-                <span className="ml-2 text-gray-600">
-                  ({product.rating} rating)
-                </span>
+                <span className="ml-2 text-gray-600">(136 rating)</span>
               </div>
             </div>
 
@@ -85,7 +83,8 @@ const ProductDetail = (props) => {
             <div className="mb-6">
               <h3 className="text-lg font-semibold mb-2">Description</h3>
               <p className="text-gray-600 leading-relaxed">
-                {product.description}
+                {product.description ||
+                  "A symbol of timeless elegance and adventure, this 41mm masterpiece features a striking blue dial, robust stainless steel case, and versatile strap options. Powered by the in-house Caliber 5100, it delivers precision, a 60-hour power reserve, and unmatched sophistication for any occasion."}
               </p>
             </div>
 
