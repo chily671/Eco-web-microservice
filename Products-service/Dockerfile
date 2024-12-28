@@ -2,11 +2,11 @@ FROM node
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY . .
+
+RUN ls
 
 RUN npm install
-
-COPY . .
 
 EXPOSE 5000
 

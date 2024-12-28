@@ -3,13 +3,14 @@ import './Item.css'
 import { Link } from 'react-router-dom'
 
 const Item = (props) => {
+  console.log(props.image)
   return (
-    <div className='item'>
-     <Link to={`/product/${props.id}`}><img onClick={window.scrollTo(0,0)} src={props.image} alt="" /></Link> 
+    <div className='item '>
+     <Link to={`/products/${props.id}`}><img onClick={window.scrollTo(0,0)} src={props.image} alt="" className='w-6' /></Link> 
         <p>{props.name}</p>
     <div className="item-prices">
         <div className="item-price-new">
-            ${props.new_price}
+            ${props.price}
         </div>
     </div>
     </div>

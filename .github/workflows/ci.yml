@@ -1,0 +1,20 @@
+name: CI
+
+on:
+  push:
+    branches: [ Add-chat-service ]
+  pull_request:
+    branches: [ Add-chat-service ]
+
+jobs:
+ build:
+   runs-on: self-hosted
+   name: Build on master
+   
+   steps:
+   - uses: actions/checkout@v3
+   
+   - name: Update system packages
+     run: |
+       ls
+       pwd

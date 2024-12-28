@@ -1,20 +1,27 @@
-import React from 'react'
-import Hero from '../Components/Hero/Hero'
-import Popular from '../Components/Popular/Popular'
-import Offers from '../Components/Offers/Offers'
-import NewCollections from '../Components/NewCollections/NewCollections'
-import NewsLetter from '../Components/NewsLetter/NewsLetter'
+import React, { useContext, useRef } from "react";
+import Chat from "../Components/Chat/Chat";
+import New_hero from "../Components/Hero/new-hero";
+import NewCollections from "../Components/NewCollections/NewCollections";
+import { AuthenticationContext } from "../Context/AuthenticationContext";
 
 const Shop = () => {
+  const { isLoggedIn } = useContext(AuthenticationContext);
+  const newCollectionsRef = useRef(null);
+  const handleScroll = () => {
+    newCollectionsRef.current.scrollIntoView({ behavior: "smooth" });
+  };
   return (
     <div>
-      <Hero/>
-      <Popular/>
-      <Offers/>
-      <NewCollections/>
-      <NewsLetter/>
-    </div>
-  )
-}
+      {/* <Hero onScroll={handleScroll} /> */}
+      <New_hero />
+      {/* {isLoggedIn ? <Recommend /> : <Popular />} */}
 
-export default Shop
+      <div ref={newCollectionsRef} className="mt-20">
+        <NewCollections />
+      </div>
+      <Chat />
+    </div>
+  );
+};
+
+export default Shop;

@@ -1,21 +1,24 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import  ShopContextProvider  from './Context/ShopContext';
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import ShopContextProvider from "./Context/ShopContext";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import MessageContextProvider from "./Context/MessageContext";
+import AuthenticationContextProvider from "./Context/AuthenticationContext";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  
-  <ShopContextProvider>
-      <React.StrictMode>
-    <App />
-  </React.StrictMode>
-  </ShopContextProvider>
-    
-  
+  <AuthenticationContextProvider>
+    <ShopContextProvider>
+      <MessageContextProvider>
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>
+      </MessageContextProvider>
+    </ShopContextProvider>
+  </AuthenticationContextProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

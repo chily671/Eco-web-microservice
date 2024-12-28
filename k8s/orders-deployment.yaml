@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders-service
+  namespace: eco-web-microservices
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: orders-service
+  template:
+    metadata:
+      labels:
+        app: orders-service
+    spec:
+      containers:
+      - name: orders-service
+        image: lykieuchi/ecommerce-web-order-service:3.0
+        ports:
+        - containerPort: 5002
+        env:
+        - name: PORT
+          value: "5002"
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-uri-secret
+              key: ORDER_MONGODB_URI
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-service
+  namespace: eco-web-microservices
+spec:
+  selector:
+    app: orders-service
+  ports:
+    - protocol: TCP
+      port: 5002
+      targetPort: 5002

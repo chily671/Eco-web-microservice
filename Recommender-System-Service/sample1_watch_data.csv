@@ -1,0 +1,21 @@
+user_id,Product ID,Product Name,Brand,Price,Category,Rating
+1,P001,Classic Leather,Omega,300,Watch,4.6
+1,P003,Explorer Chrono,Rolex,1500,Watch,4.8
+2,P002,Digital Pro,Casio,120,Smartwatch,4.2
+2,P008,Innovator,Xiaomi,100,Smartwatch,4.0
+3,P001,Classic Leather,Omega,300,Watch,4.6
+3,P007,Classic Sport,Seiko,350,Watch,4.4
+4,P004,Diver 300,Tag Heuer,2500,Watch,4.9
+4,P009,Ocean Explorer,Citizen,180,Watch,3.8
+5,P005,Modern Quartz,Tissot,400,Watch,4.1
+5,P010,Aviator,Hamilton,700,Watch,4.3
+6,P001,Classic Leather,Omega,300,Watch,4.6
+6,P011,Solar Power,Citizen,200,Watch,4.2
+7,P003,Explorer Chrono,Rolex,1500,Watch,4.8
+7,P004,Diver 300,Tag Heuer,2500,Watch,4.9
+8,P002,Digital Pro,Casio,120,Smartwatch,4.2
+8,P008,Innovator,Xiaomi,100,Smartwatch,4.0
+9,P005,Modern Quartz,Tissot,400,Watch,4.1
+9,P010,Aviator,Hamilton,700,Watch,4.3
+10,P007,Classic Sport,Seiko,350,Watch,4.4
+10,P009,Ocean Explorer,Citizen,180,Watch,3.8

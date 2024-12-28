@@ -1,0 +1,43 @@
+name: Deploy to Kubernetes
+
+on:
+  push:
+    branches:
+      - Add-chat-service 
+
+jobs:
+  deploy:
+    name: Deploy to Kubernetes
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Check and apply Kubernetes configurations
+      run: |
+        if ! kubectl get namespace eco-web-microservices >/dev/null 2>&1; then
+          kubectl apply -f k8s/nginx-configmap.yaml
+          kubectl apply -f k8s/secret.yaml 
+          kubectl apply -f k8s/users-deployment.yaml
+          kubectl apply -f k8s/products-deployment.yaml
+          kubectl apply -f k8s/
+        else
+          echo "Namespace eco-web-microservices already exists, skipping configuration apply"
+        fi
+  check:
+    needs: deploy
+    strategy:
+      matrix:
+        service: ['users', 'products']
+    runs-on: self-hosted
+    steps:
+      - name: Check ${{ matrix.service }} deployment
+        run: kubectl rollout status deployment/${{ matrix.service }}-service -n eco-web-microservices
+  port-forward:
+    needs: check
+    runs-on: self-hosted
+    steps:
+      - name: Start port forwarding
+        run: |
+          echo "${{ secrets.SUDO_PASSWORD }}" | nohup sudo -S -E kubectl port-forward service/nginx-proxy 80:80 -n eco-web-microservices --address 0.0.0.0  > ~/kubectl-portforward.log 2>&1 &

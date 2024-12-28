@@ -1,18 +1,15 @@
-import React, {useContext} from 'react'
-import "./CartItemUnit.css"
-import { ShopContext } from '../../Context/ShopContext'
+import React, { useContext } from "react";
+import "./CartItemUnit.css";
+import { ShopContext } from "../../Context/ShopContext";
+import { FiMinus, FiPlus } from "react-icons/fi";
 
-const CartItemUnit = ({props, quantity}) => {
-
-  const {removeFromCart} = useContext(ShopContext);
+const CartItemUnit = ({ props }) => {
+  const { removeFromCart, addToCart, decreaseQuantity, cartItems } =
+    useContext(ShopContext);
 
   return (
     <div className="product-card">
-      <img
-        className="product-image"
-        src={props.image}
-        alt={props.name}
-      />
+      <img className="product-image" src={props.image} alt={props.name} />
       <div className="product-details">
         <h2 className="product-name">{props.name}</h2>
         <span className="price-des">
@@ -27,18 +24,35 @@ const CartItemUnit = ({props, quantity}) => {
           <p className="product-size">Size {props.size}</p>
           <div>
             <span className="quantity-label">Quantity:</span>
-            <button className="quantity-button decrease-button">-</button>
-            <span className="quantity-value">{quantity}</span>
-            <button className="quantity-button increase-button">+</button>
+            <button
+              className="p-1 hover:bg-gray-100 rounded"
+              onClick={() => decreaseQuantity(props.id)}
+            >
+              <FiMinus className="h-4 w-4" />
+            </button>
+            <span className="text-sm">{cartItems[props.id]}</span>
+            <button
+              className="p-1 hover:bg-gray-100 rounded"
+              onClick={() => addToCart(props.id)}
+            >
+              <FiPlus className="h-4 w-4" />
+            </button>
           </div>
         </div>
         <div className="fav-remove">
           <button className="add-to-favorites">Move to Favorites</button>
-          <button onClick={()=>{removeFromCart(props.id)}} className="remove-button">Remove</button>
+          <button
+            onClick={() => {
+              removeFromCart(props.id);
+            }}
+            className="remove-button"
+          >
+            Remove
+          </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default CartItemUnit
+export default CartItemUnit;
