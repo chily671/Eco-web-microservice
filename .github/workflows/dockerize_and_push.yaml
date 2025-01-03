@@ -157,7 +157,8 @@ jobs:
       dockerize-product-service,
       dockerize-order-service,
       dockerize-gateway,
-      dockerize-users-service
+      dockerize-users-service,
+      dockerize-pay-service
     ]
     runs-on: ubuntu-latest
     steps:
