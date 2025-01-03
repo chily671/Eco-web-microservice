@@ -52,7 +52,7 @@ users:
   name: users-service
   replicas: 1
   image:
-    repository: lykieuchi/order-service
+    repository: lykieuchi/users-service
   port: 5001
 
 gateway:
