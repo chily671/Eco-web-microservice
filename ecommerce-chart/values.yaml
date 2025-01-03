@@ -15,6 +15,9 @@ configMap:
   productServiceUrl: "http://product-service:5000"
   userServiceUrl: "http://users-service:5001"
   orderServiceUrl: "http://orders-service:5002"
+  gatewayServiceUrl: "http://gateway-service:5555"
+  chatServiceUrl: "http://chat-service:5008"
+  payServiceUrl: "http://pay-service:5009"
 
 mongodb:
   secrets:
@@ -51,3 +54,10 @@ users:
   image:
     repository: lykieuchi/order-service
   port: 5001
+
+gateway:
+  name: gateway-service
+  replicas: 1
+  image:
+    repository: lykieuchi/gateway-service
+  port: 5555

@@ -18,6 +18,9 @@ spec:
         image: "{{ .Values.users.image.repository }}:{{ .Values.tag }}"
         ports:
         - containerPort: {{ .Values.users.port }}
+        envFrom:
+        - configMapRef:
+            name: app-config
         env:
         - name: PORT
           value: "{{ .Values.users.port }}"

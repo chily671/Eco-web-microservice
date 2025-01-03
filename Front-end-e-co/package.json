@@ -1,5 +1,5 @@
 {
-  "proxy": "http://geteway-service:5555",
+  "proxy": "http://gateway-service:5555",
   "name": "e-co",
   "version": "0.1.0",
   "private": true,
