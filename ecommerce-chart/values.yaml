@@ -12,7 +12,7 @@ ingress:
 configMap:
   searchServiceUrl: "http://search-service:1234"
   rsServiceUrl: "http://rs-service:1357"
-  productServiceUrl: "http://product-service:5000"
+  productServiceUrl: "http://products-service:5000"
   userServiceUrl: "http://users-service:5001"
   orderServiceUrl: "http://orders-service:5002"
   gatewayServiceUrl: "http://gateway-service:5555"
