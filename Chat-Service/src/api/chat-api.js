@@ -63,6 +63,10 @@ module.exports = async (app, channel) => {
       }
   };
 
+  app.get("/", (req, res) => {
+    res.status(200).json({ message: "Hello from Chat-Service" });
+  });
+
   app.get("/isadmin", fetchAdmin, async (req, res) => {
     res.json({ isAdmin: true });
   });

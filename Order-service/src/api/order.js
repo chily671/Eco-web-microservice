@@ -57,6 +57,10 @@ module.exports = (app, channel) => {
     }
   };
 
+  app.get("/", (req, res) => {
+    res.status(200).json({ message: "Hello from Order-Service" });
+  });
+
   // Creating Creat Order Endpoint
   app.post("/order", fetchUser, async (req, res) => {
     try {

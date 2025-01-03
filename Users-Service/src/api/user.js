@@ -69,6 +69,10 @@ module.exports = async (app, channel) => {
   // Subscribe to the channel
   SubscribeMessage(channel, service);
 
+  app.get("/", (req, res) => {
+    res.status(200).json({ message: "Hello from Uer-Service" });
+  });
+
   app.post("/signup", async (req, res) => {
     try {
       console.log("Signup request received", req.body);

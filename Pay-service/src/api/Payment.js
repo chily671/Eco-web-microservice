@@ -128,6 +128,10 @@ module.exports = async (app, channel) => {
     return handleResponse(response);
   };
 
+  app.get("/", (req, res) => {
+    res.status(200).json({ message: "Hello from Pay-Service" });
+  });
+
   app.post(`/api/orders`, async (req, res) => {
     try {
       // use the cart information passed from the front-end to calculate the order amount detals
