@@ -61,3 +61,10 @@ gateway:
   image:
     repository: lykieuchi/gateway-service
   port: 5555
+
+payment:
+  name: pay-service
+  replicas: 1
+  image:
+    repository: lykieuchi/pay-service
+  port: 5009

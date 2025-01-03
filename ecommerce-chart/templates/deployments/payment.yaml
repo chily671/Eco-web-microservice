@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.payment.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.payment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.payment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.payment.name }}
+    spec:
+      containers:
+      - name: {{ .Values.payment.name }}
+        image: "{{ .Values.payment.image.repository }}:{{ .Values.tag }}"
+        ports:
+        - containerPort: {{ .Values.payment.port }}
+        env:
+        - name: PORT
+          value: "{{ .Values.payment.port }}"
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-uri-secret
+              key: ORDER_MONGODB_URI

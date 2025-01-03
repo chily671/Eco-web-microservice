@@ -15,6 +15,7 @@ const fs = require("fs");
 const fetch = require("node-fetch");
 const express = require("express");
 const axios = require("axios");
+const {FRONTEND_SERVICE_URL} = require("../config");
 
 const stripe = require("stripe")(STRIPE_SECRET_KEY);
 module.exports = async (app, channel) => {
@@ -278,8 +279,8 @@ module.exports = async (app, channel) => {
         payment_method_types: ["card"],
         line_items: lineItems,
         mode: "payment",
-        success_url: `http://localhost:3000/success`,
-        cancel_url: `http://localhost:3000`,
+        success_url: `${FRONTEND_SERVICE_URL}/success`,
+        cancel_url: `${FRONTEND_SERVICE_URL}`,
       });
 
       console.log(session);

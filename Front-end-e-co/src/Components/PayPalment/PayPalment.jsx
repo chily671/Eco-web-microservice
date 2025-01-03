@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { ShopContext } from "../../Context/ShopContext";
-const serverURL = "http://localhost:5009";
+import dotenv from "dotenv";
 
 // Renders errors or successfull transactions on the screen.
 function Message({ content }) {
@@ -31,7 +31,7 @@ function PayPalment(props) {
           }}
           createOrder={async () => {
             try {
-              const response = await fetch(`${serverURL}/api/orders`, {
+              const response = await fetch(`${process.env.PAY_SERVICE_URL}/api/orders`, {
                 method: "POST",
                 mode: "cors",
                 headers: {
@@ -64,7 +64,7 @@ function PayPalment(props) {
           onApprove={async (data, actions) => {
             try {
               const response = await fetch(
-                `${serverURL}/api/orders/${data.orderID}/capture`,
+                `${process.env.PAY_SERVICE_URL}/api/orders/${data.orderID}/capture`,
                 {
                   method: "POST",
                   headers: {

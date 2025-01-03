@@ -6,7 +6,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { FaUser, FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
 import "./Checkout.css";
-const serverURL = "http://localhost:5009";
+import dotenv from "dotenv";
 
 const CheckoutPage = () => {
   function Message({ content }) {
@@ -320,7 +320,7 @@ const CheckoutPage = () => {
                         let ordercurrent = orderDetail;
                         console.log("order", ordercurrent);
                         const response = await fetch(
-                          `${serverURL}/api/orders`,
+                          `${process.env.PAY_SERVICE_URL}/api/orders`,
                           {
                             method: "POST",
                             mode: "cors",
@@ -355,7 +355,7 @@ const CheckoutPage = () => {
                     onApprove={async (data, actions) => {
                       try {
                         const response = await fetch(
-                          `${serverURL}/api/orders/${data.orderID}/capture`,
+                          `${process.env.PAY_SERVICE_URL}/api/orders/${data.orderID}/capture`,
                           {
                             method: "POST",
                             headers: {

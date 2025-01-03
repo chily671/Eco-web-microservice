@@ -1,6 +1,7 @@
 import React, { createContext, useState, useRef, useContext } from "react";
 import { useEffect } from "react";
 import io from "socket.io-client";
+import dotenv from "dotenv";
 import { AuthenticationContext } from "./AuthenticationContext";
 
 export const MessageContext = createContext(null);
@@ -21,7 +22,7 @@ const MessageContextProvider = (props) => {
   const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:5008", {
+    const newSocket = io(process.env.CHAT_SERVICE_URL, {
       path: "/socket-chat", // Phải khớp với đường dẫn proxy tại Gateway
       transports: ["websocket"],
       auth: {
