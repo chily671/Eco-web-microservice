@@ -15,7 +15,6 @@ import {
 } from "@chatscope/chat-ui-kit-react";
 import { MessageContext } from "../../Context/MessageContext";
 import "../../Pages/CSS/AdminPage.css";
-import AdminSidebar from "../AdminSidebar/AdminSidebar";
 
 const AdminChatPage = () => {
   const {

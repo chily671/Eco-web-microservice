@@ -27,8 +27,12 @@ app.use("/product", proxy(process.env.PRODUCT_SERVICE_URL, { parseReqBody: false
 app.use("/chat", proxy(process.env.CHAT_SERVICE_URL)); // Chuyển tiếp các yêu cầu HTTP cho chat
 app.use("/pay", proxy(process.env.PAY_SERVICE_URL)); // Chuyển tiếp các yêu cầu HTTP cho api
 // Chuyển tiếp các yêu cầu HTTP thông thường
-app.use("/chat", (req, res) => {
-  wsProxy.web(req, res); // Chuyển tiếp yêu cầu HTTP đến backend
+app.use("/chat", (req, res, next) => {
+  if (req.method === "GET" && req.headers.upgrade === "websocket") {
+    wsProxy.web(req, res);
+  } else {
+    next();
+  }
 });
 // Xử lý các kết nối WebSocket (sự kiện upgrade)
 server.on("upgrade", (req, socket, head) => {
