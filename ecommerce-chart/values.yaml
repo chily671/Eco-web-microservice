@@ -68,3 +68,10 @@ payment:
   image:
     repository: lykieuchi/pay-service
   port: 5009
+
+chat:
+  name: chat-service
+  replicas: 1
+  image:
+    repository: lykieuchi/chat-service
+  port: 5008

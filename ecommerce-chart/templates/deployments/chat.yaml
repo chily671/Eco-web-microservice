@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.chat.name }}-deployment
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: {{ .Values.chat.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.chat.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.chat.name }}
+    spec:
+      containers:
+        - name: {{ .Values.chat.name }}
+          image: "{{ .Values.chat.image.repository }}:{{ .Values.tag }}"
+          ports:
+            - containerPort: {{ .Values.chat.port }}

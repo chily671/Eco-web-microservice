@@ -53,19 +53,19 @@ jobs:
           docker build -t ${{ env.DOCKER_REPO }}/product-service:${{ env.SHA_TAG }} .
           docker push ${{ env.DOCKER_REPO }}/product-service:${{ env.SHA_TAG }}
 
-  # dockerize-chat-service:
-  #   runs-on: perf-worker-2
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: docker/login-action@v2
-  #       with:
-  #         username: ${{ env.DOCKER_USERNAME }}
-  #         password: ${{ env.DOCKER_PASSWORD }}
-  #     - name: Build and Push Chat Service
-  #       run: |
-  #         cd Chat-Service
-  #         docker build -t ${{ env.DOCKER_REPO }}/chat-service:${{ env.SHA_TAG }} .
-  #         docker push ${{ env.DOCKER_REPO }}/chat-service:${{ env.SHA_TAG }}
+  dockerize-chat-service:
+    runs-on: perf-worker-2
+    steps:
+      - uses: actions/checkout@v3
+      - uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USERNAME }}
+          password: ${{ env.DOCKER_PASSWORD }}
+      - name: Build and Push Chat Service
+        run: |
+          cd Chat-Service
+          docker build -t ${{ env.DOCKER_REPO }}/chat-service:${{ env.SHA_TAG }} .
+          docker push ${{ env.DOCKER_REPO }}/chat-service:${{ env.SHA_TAG }}
 
   dockerize-order-service:
     runs-on: perf-worker-3
@@ -158,7 +158,8 @@ jobs:
       dockerize-order-service,
       dockerize-gateway,
       dockerize-users-service,
-      dockerize-pay-service
+      dockerize-pay-service,
+      dockerize-chat-service
     ]
     runs-on: ubuntu-latest
     steps:
