@@ -11,7 +11,6 @@ const {
 } = require("../config");
 const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
 const fetch = require("node-fetch");
 const express = require("express");
 const axios = require("axios");
@@ -181,17 +180,17 @@ module.exports = async (app, channel) => {
     });
   });
 
-  // Function to download image from URL
-  async function downloadImage(imageUrl) {
-    const response = await fetch(imageUrl);
-    const buffer = await response.buffer();
-    const fileName = Date.now() + path.extname(imageUrl);
-    const filePath = path.join(__dirname, "upload/images", fileName);
+  // // Function to download image from URL
+  // async function downloadImage(imageUrl) {
+  //   const response = await fetch(imageUrl);
+  //   const buffer = await response.buffer();
+  //   const fileName = Date.now() + path.extname(imageUrl);
+  //   const filePath = path.join(__dirname, "upload/images", fileName);
 
-    // Save image to local storage using fs
-    fs.writeFileSync(filePath, buffer);
-    return filePath.replace("upload", "images"); // Returning relative path for web access
-  }
+  //   // Save image to local storage using fs
+  //   fs.writeFileSync(filePath, buffer);
+  //   return filePath.replace("upload", "images"); // Returning relative path for web access
+  // }
 
   // Stripe
   app.post("/create-checkout-session", async (req, res) => {
