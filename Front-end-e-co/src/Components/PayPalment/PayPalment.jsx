@@ -19,6 +19,8 @@ function PayPalment(props) {
     "data-sdk-integration-source": "integrationbuilder_sc",
   };
 
+  const payserver = process.env.PAY_SERVICE_URL;
+
   const [message, setMessage] = useState("");
 
   return (
@@ -31,7 +33,7 @@ function PayPalment(props) {
           }}
           createOrder={async () => {
             try {
-              const response = await fetch(`${process.env.PAY_SERVICE_URL}/api/orders`, {
+              const response = await fetch(`${payserver}/api/orders`, {
                 method: "POST",
                 mode: "cors",
                 headers: {
@@ -64,7 +66,7 @@ function PayPalment(props) {
           onApprove={async (data, actions) => {
             try {
               const response = await fetch(
-                `${process.env.PAY_SERVICE_URL}/api/orders/${data.orderID}/capture`,
+                `${payserver}/api/orders/${data.orderID}/capture`,
                 {
                   method: "POST",
                   headers: {

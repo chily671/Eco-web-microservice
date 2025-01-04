@@ -29,7 +29,7 @@ const CheckoutPage = () => {
   };
 
   const [message, setMessage] = useState("");
-
+  const payserver = process.env.PAY_SERVICE_URL;
   // Tạo các biến để lưu thông tin đơn hàng
 
   const [orderDetail, setOrderDetail] = useState({
@@ -320,7 +320,7 @@ const CheckoutPage = () => {
                         let ordercurrent = orderDetail;
                         console.log("order", ordercurrent);
                         const response = await fetch(
-                          `${process.env.PAY_SERVICE_URL}/api/orders`,
+                          `${payserver}/api/orders`,
                           {
                             method: "POST",
                             mode: "cors",
@@ -355,7 +355,7 @@ const CheckoutPage = () => {
                     onApprove={async (data, actions) => {
                       try {
                         const response = await fetch(
-                          `${process.env.PAY_SERVICE_URL}/api/orders/${data.orderID}/capture`,
+                          `${payserver}/api/orders/${data.orderID}/capture`,
                           {
                             method: "POST",
                             headers: {

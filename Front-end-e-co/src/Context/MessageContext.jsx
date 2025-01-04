@@ -20,9 +20,10 @@ const MessageContextProvider = (props) => {
   const [currentMessage, setCurrentMessage] = useState([]);
 
   const [currentUserId, setCurrentUserId] = useState(null);
-
+ 
+  const chatserver = process.env.CHAT_SERVICE_URL;
   useEffect(() => {
-    const newSocket = io(process.env.CHAT_SERVICE_URL, {
+    const newSocket = io(chatserver, {
       path: "/socket-chat", // Phải khớp với đường dẫn proxy tại Gateway
       transports: ["websocket"],
       auth: {
