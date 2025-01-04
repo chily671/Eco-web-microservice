@@ -4,7 +4,7 @@ const Server = require("socket.io").Server;
 const { databaseConnection } = require("./src/database/connection");
 const { chat } = require("./src/api");
 const ChatService = require("./src/services/chat-service");
-const { USER_SERVICE_URL, FRONTEND_URL, PORT } = require("./src/config");
+const { USER_SERVICE_URL, FRONTEND_SERVICE_URL, PORT } = require("./src/config");
 const app = express();
 chat(app);
 app.use(express.json());
@@ -15,7 +15,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: `${FRONTEND_URL}`,
+    origin: `${FRONTEND_SERVICE_URL}`,
     methods: ["GET", "POST"],
     credentials: true,
   },
