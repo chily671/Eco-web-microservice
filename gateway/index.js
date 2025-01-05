@@ -11,7 +11,7 @@ const server = http.createServer(app);
 
 // Tạo proxy server để chuyển tiếp các yêu cầu WebSocket
 const wsProxy = httpProxy.createProxyServer({
-  target: process.env.CHAT_SERVICE, // Service WebSocket backend chạy ở cổng 5008
+  target: process.env.CHAT_SERVICE_URL, // Service WebSocket backend chạy ở cổng 5008
   ws: true, // Kích hoạt hỗ trợ WebSocket
 });
 
