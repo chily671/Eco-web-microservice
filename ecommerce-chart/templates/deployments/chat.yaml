@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Values.chat.name }}-deployment
+  name: {{ .Values.chat.name }}
   namespace: {{ .Values.namespace }}
 spec:
   replicas: {{ .Values.chat.replicas }}
@@ -14,7 +14,15 @@ spec:
         app: {{ .Values.chat.name }}
     spec:
       containers:
-        - name: {{ .Values.chat.name }}
-          image: "{{ .Values.chat.image.repository }}:{{ .Values.tag }}"
-          ports:
-            - containerPort: {{ .Values.chat.port }}
+      - name: {{ .Values.chat.name }}
+        image: "{{ .Values.chat.image.repository }}:{{ .Values.tag }}"
+        ports:
+        - containerPort: {{ .Values.chat.port }}
+        env:
+        - name: PORT
+          value: "{{ .Values.chat.port }}"
+        - name: MONGODB_URI
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-uri-secret
+              key: CHAT_MONGODB_URI
