@@ -11,11 +11,14 @@ app.use(express.json());
 databaseConnection();
 const service = new ChatService();
 
+const frontendUrl = process.env.FRONTEND_SERVICE_URL;
+const userUrl = process.env.USER_SERVICE_URL;
+
 const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: `${FRONTEND_SERVICE_URL}`,
+    origin: `${frontendUrl}`,
     methods: ["GET", "POST"],
     credentials: true,
   },
@@ -26,7 +29,7 @@ io.on("connection", async (socket) => {
   // console.log("Socket.id: " + socket.id);
   const token = socket.handshake.auth.token;
   try {
-    const decoded = await fetch(`${USER_SERVICE_URL}/decodetoken`, {
+    const decoded = await fetch(`${userUrl}/decodetoken`, {
       method: "POST",
       headers: {
         "auth-token": token,
@@ -36,7 +39,7 @@ io.on("connection", async (socket) => {
     socket.join(decoded);
     // console.log("User connected to user: ", decoded);
     //TODO: Get all users from database and join their rooms by their id
-    const users = await fetch(`${USER_SERVICE_URL}/allusers`, {
+    const users = await fetch(`${userUrl}/allusers`, {
       method: "GET",
       headers: {
         "auth-token": token,
@@ -89,7 +92,7 @@ io.on("connection", async (socket) => {
       // Giai mã token
       console.log("User ID - token in addmessage: ", data.user_id);
       let token = data.user_id;
-      const userid = await fetch(`${USER_SERVICE_URL}/decodetoken`, {
+      const userid = await fetch(`${userUrl}/decodetoken`, {
         method: "POST",
         headers: {
           "auth-token": token,
