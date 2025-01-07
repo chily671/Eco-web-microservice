@@ -179,7 +179,7 @@ const CheckoutPage = () => {
                   </label>
                   <input
                     type="text"
-                    name="username"
+                    name="fullname"
                     value={orderDetail.fullname}
                     onChange={changHandler}
                     placeholder="Enter your username"
