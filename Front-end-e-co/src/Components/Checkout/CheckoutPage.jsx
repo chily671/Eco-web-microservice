@@ -6,7 +6,6 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { FaUser, FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
 import "./Checkout.css";
-import dotenv from "dotenv";
 
 const CheckoutPage = () => {
   function Message({ content }) {
