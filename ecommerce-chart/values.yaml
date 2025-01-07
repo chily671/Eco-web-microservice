@@ -18,6 +18,7 @@ configMap:
   gatewayServiceUrl: "http://gateway-service:5555"
   chatServiceUrl: "http://chat-service:5008"
   payServiceUrl: "http://pay-service:5009"
+  frontendServiceUrl: "http://frontend:3000"
 
 mongodb:
   secrets:

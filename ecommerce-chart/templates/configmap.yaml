@@ -12,3 +12,4 @@ data:
   GATEWAY_SERVICE_URL: {{ .Values.configMap.gatewayServiceUrl }}
   CHAT_SERVICE_URL: {{ .Values.configMap.chatServiceUrl }}
   PAY_SERVICE_URL: {{ .Values.configMap.payServiceUrl }}
+  FRONTEND_SERVICE_URL: {{ .Values.configMap.frontendServiceUrl }}

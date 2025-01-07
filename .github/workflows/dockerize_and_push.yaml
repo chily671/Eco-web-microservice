@@ -95,19 +95,6 @@ jobs:
           docker build -t ${{ env.DOCKER_REPO }}/pay-service:${{ env.SHA_TAG }} .
           docker push ${{ env.DOCKER_REPO }}/pay-service:${{ env.SHA_TAG }}
 
-  # dockerize-rating-service:
-  #   runs-on: perf-worker-5
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: docker/login-action@v2
-  #       with:
-  #         username: ${{ env.DOCKER_USERNAME }}
-  #         password: ${{ env.DOCKER_PASSWORD }}
-  #     - name: Build and Push Rating Service
-  #       run: |
-  #         cd Rating-service
-  #         docker build -t ${{ env.DOCKER_REPO }}/rating-service:${{ env.SHA_TAG }} .
-  #         docker push ${{ env.DOCKER_REPO }}/rating-service:${{ env.SHA_TAG }}
   dockerize-gateway:
     runs-on: perf-worker-5
     steps:
@@ -122,19 +109,6 @@ jobs:
           docker build -t ${{ env.DOCKER_REPO }}/gateway-service:${{ env.SHA_TAG }} .
           docker push ${{ env.DOCKER_REPO }}/gateway-service:${{ env.SHA_TAG }}
 
-  # dockerize-recommender-system-service:
-  #   runs-on: perf-worker-6
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: docker/login-action@v2
-  #       with:
-  #         username: ${{ env.DOCKER_USERNAME }}
-  #         password: ${{ env.DOCKER_PASSWORD }}
-  #     - name: Build and Push Recommender Service
-  #       run: |
-  #         cd Recommender-System-Service
-  #         docker build -t ${{ env.DOCKER_REPO }}/recommender-service:${{ env.SHA_TAG }} .
-  #         docker push ${{ env.DOCKER_REPO }}/recommender-service:${{ env.SHA_TAG }}
 
   dockerize-users-service:
     runs-on: perf-worker-6
@@ -173,4 +147,17 @@ jobs:
             "tag": "${{ env.SHA_TAG }}"
           }
 
+# dockerize-rating-service:
+  #   runs-on: perf-worker-5
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: docker/login-action@v2
+  #       with:
+  #         username: ${{ env.DOCKER_USERNAME }}
+  #         password: ${{ env.DOCKER_PASSWORD }}
+  #     - name: Build and Push Rating Service
+  #       run: |
+  #         cd Rating-service
+  #         docker build -t ${{ env.DOCKER_REPO }}/rating-service:${{ env.SHA_TAG }} .
+  #         docker push ${{ env.DOCKER_REPO }}/rating-service:${{ env.SHA_TAG }}
         
