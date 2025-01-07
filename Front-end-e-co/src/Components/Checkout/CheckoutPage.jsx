@@ -175,12 +175,12 @@ const CheckoutPage = () => {
                 <div>
                   <label className="flex items-center text-sm font-medium text-gray-700">
                     <FaUser className="mr-2" />
-                    Username
+                    Fullname
                   </label>
                   <input
                     type="text"
                     name="username"
-                    value={orderDetail.username}
+                    value={orderDetail.fullname}
                     onChange={changHandler}
                     placeholder="Enter your username"
                     className={`mt-1 block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500`}
