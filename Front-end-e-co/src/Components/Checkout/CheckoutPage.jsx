@@ -29,7 +29,7 @@ const CheckoutPage = () => {
   };
 
   const [message, setMessage] = useState("");
-  const payserver = process.env.PAY_SERVICE_URL;
+  const payserver = process.env.REACT_APP_PAY_URL;
   // Tạo các biến để lưu thông tin đơn hàng
 
   const [orderDetail, setOrderDetail] = useState({

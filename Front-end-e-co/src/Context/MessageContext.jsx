@@ -1,7 +1,6 @@
 import React, { createContext, useState, useRef, useContext } from "react";
 import { useEffect } from "react";
 import io from "socket.io-client";
-import dotenv from "dotenv";
 import { AuthenticationContext } from "./AuthenticationContext";
 
 export const MessageContext = createContext(null);
@@ -21,7 +20,7 @@ const MessageContextProvider = (props) => {
 
   const [currentUserId, setCurrentUserId] = useState(null);
  
-  const chatserver = process.env.CHAT_SERVICE_URL;
+  const chatserver = process.env.REACT_APP_WS_URL;
   useEffect(() => {
     const newSocket = io(chatserver, {
       path: "/socket-chat", // Phải khớp với đường dẫn proxy tại Gateway

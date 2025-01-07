@@ -13,3 +13,5 @@ data:
   CHAT_SERVICE_URL: {{ .Values.configMap.chatServiceUrl }}
   PAY_SERVICE_URL: {{ .Values.configMap.payServiceUrl }}
   FRONTEND_SERVICE_URL: {{ .Values.configMap.frontendServiceUrl }}
+  REACT_APP_WS_URL: {{ .Values.configMap.wsServiceUrl }}
+  REACT_APP_PAY_URL: {{ .Values.configMap.payServiceUrl }}

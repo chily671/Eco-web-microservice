@@ -19,7 +19,7 @@ function PayPalment(props) {
     "data-sdk-integration-source": "integrationbuilder_sc",
   };
 
-  const payserver = process.env.PAY_SERVICE_URL;
+  const payserver = process.env.REACT_APP_PAY_URL;
 
   const [message, setMessage] = useState("");
 
