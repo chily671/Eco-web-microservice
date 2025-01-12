@@ -316,7 +316,6 @@ const CheckoutPage = () => {
                     }}
                     createOrder={async () => {
                       try {
-                        let ordercurrent = orderDetail;
                         console.log("order", ordercurrent);
                         const response = await fetch(
                           `/pay/api/orders`,
@@ -328,7 +327,7 @@ const CheckoutPage = () => {
                             },
                             // use the "body" param to optionally pass additional order information
                             // like product ids and quantities
-                            body: JSON.stringify(ordercurrent),
+                            body: JSON.stringify(orderDetail),
                           }
                         );
 
