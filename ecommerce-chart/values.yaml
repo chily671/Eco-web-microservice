@@ -19,7 +19,7 @@ configMap:
   chatServiceUrl: "http://chat-service:5008"
   payServiceUrl: "http://pay-service:5009"
   frontendServiceUrl: "http://frontend:3000"
-  wsServiceUrl: "http://chat-service:5008"
+  wsServiceUrl: "ws://chat-service:5008"
   
 
 mongodb:

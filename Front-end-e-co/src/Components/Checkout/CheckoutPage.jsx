@@ -319,7 +319,7 @@ const CheckoutPage = () => {
                         let ordercurrent = orderDetail;
                         console.log("order", ordercurrent);
                         const response = await fetch(
-                          `${payserver}/api/orders`,
+                          `/pay/api/orders`,
                           {
                             method: "POST",
                             mode: "cors",
@@ -354,7 +354,7 @@ const CheckoutPage = () => {
                     onApprove={async (data, actions) => {
                       try {
                         const response = await fetch(
-                          `${payserver}/api/orders/${data.orderID}/capture`,
+                          `/pay/api/orders/${data.orderID}/capture`,
                           {
                             method: "POST",
                             headers: {
