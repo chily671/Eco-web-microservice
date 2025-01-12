@@ -20,7 +20,7 @@ spec:
         - containerPort: {{ .Values.payment.port }}
         envFrom:
         - configMapRef:
-          name: app-config
+            name: app-config
         env:
         - name: PORT
           value: "{{ .Values.payment.port }}"
