@@ -29,6 +29,14 @@ mongodb:
     orderUri: "bW9uZ29kYitzcnY6Ly8yMDUyMTEzMTpoYXpha2FjaGk2OUBjbHVzdGVyMC5uY2JhbGl5Lm1vbmdvZGIubmV0L09yZGVyLVdhdGNoX3Nob3A/cmV0cnlXcml0ZXM9dHJ1ZSZ3PW1ham9yaXR5JmFwcE5hbWU9Q2x1c3RlcjA="
     chatUri: "bW9uZ29kYitzcnY6Ly8yMDUyMTEzMTpoYXpha2FjaGk2OUBjbHVzdGVyMC5uY2JhbGl5Lm1vbmdvZGIubmV0L1dhdGNoc2hvcF9DaGF0P3JldHJ5V3JpdGVzPXRydWUmdz1tYWpvcml0eSZhcHBOYW1lPUNsdXN0ZXIw"
 
+paypal:
+  PAYPAL_CLIENT_ID: "AYQ_XBnAGfXPBw43yGEDl_XJJqENJXsKPcSbM6lyVqowKMLlhQFei5XP1zUdnug5YwXxA-NZ9lvzZT42"
+  PAYPAL_CLIENT_SECRET: "EAYgWg1rfE6CZMfXS5oQRy-y8cfKgaKhXHhcKTwtFJ58QLhhrdkIVrjWg6OzvgvwHrO1S6DnidHEh-m5"
+  PAYPAL_API: "https://api-m.sandbox.paypal.com"
+
+stripe:
+  STRIPE_SECRET_KEY: "sk_test_51QFV1OJu8ujkgWdNlz3WkbsYRiyllmKEWFxb1XnSvq3CHLl64w47Vf5vPb3ZCmDln5ALACBJv7KkrBAzrR14ynNE00OTop66zk"
+
 tag: 4e11591611a6a6a9666295a59f3725ed47f957b9
 
 frontend:

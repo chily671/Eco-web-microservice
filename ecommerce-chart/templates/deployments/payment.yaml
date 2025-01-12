@@ -26,3 +26,11 @@ spec:
             secretKeyRef:
               name: mongodb-uri-secret
               key: ORDER_MONGODB_URI
+        - name: PAYPAL_CLIENT_ID
+          value: "{{ .Values.paypal.PAYPAL_CLIENT_ID }}"
+        - name: PAYPAL_CLIENT_SECRET
+          value: "{{ .Values.paypal.PAYPAL_CLIENT_SECRET }}"
+        - name: PAYPAL_API
+          value: "{{ .Values.paypal.PAYPAL_API }}"
+        - name: STRIPE_SECRET_KEY
+          value: "{{ .Values.stripe.STRIPE_SECRET_KEY }}"

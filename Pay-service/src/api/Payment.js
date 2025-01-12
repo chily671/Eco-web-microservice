@@ -1,5 +1,3 @@
-// host static files
-//app.use(express.static("client"));
 const {
   PAYPAL_CLIENT_ID,
   PAYPAL_CLIENT_SECRET,
@@ -13,7 +11,6 @@ const multer = require("multer");
 const path = require("path");
 const fetch = require("node-fetch");
 const express = require("express");
-const axios = require("axios");
 const {FRONTEND_SERVICE_URL} = require("../config");
 
 const stripe = require("stripe")(STRIPE_SECRET_KEY);
@@ -57,10 +54,6 @@ module.exports = async (app, channel) => {
       "shopping cart information passed from the frontend createOrder() callback:",
       cart
     );
-
-    //let userData = await Users.findOne({_id:req.user.id});
-    //let products = await Product.find({id:userData.cartData.id})
-    //let total = userData.cartData[itemId] * products.new_price;
     const accessToken = await generateAccessToken();
     const url = `${PAYPAL_API}/v2/checkout/orders`;
     const payload = {
@@ -79,11 +72,6 @@ module.exports = async (app, channel) => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
-        // Uncomment one of these to force an error for negative testing (in sandbox mode only). Documentation:
-        // https://developer.paypal.com/tools/sandbox/negative-testing/request-headers/
-        // "PayPal-Mock-Response": '{"mock_application_codes": "MISSING_REQUIRED_PARAMETER"}'
-        // "PayPal-Mock-Response": '{"mock_application_codes": "PERMISSION_DENIED"}'
-        // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
       },
       method: "POST",
       body: JSON.stringify(payload),
@@ -117,11 +105,6 @@ module.exports = async (app, channel) => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,
-        // Uncomment one of these to force an error for negative testing (in sandbox mode only). Documentation:
-        // https://developer.paypal.com/tools/sandbox/negative-testing/request-headers/
-        // "PayPal-Mock-Response": '{"mock_application_codes": "INSTRUMENT_DECLINED"}'
-        // "PayPal-Mock-Response": '{"mock_application_codes": "TRANSACTION_REFUSED"}'
-        // "PayPal-Mock-Response": '{"mock_application_codes": "INTERNAL_SERVER_ERROR"}'
       },
     });
 
@@ -180,17 +163,6 @@ module.exports = async (app, channel) => {
     });
   });
 
-  // // Function to download image from URL
-  // async function downloadImage(imageUrl) {
-  //   const response = await fetch(imageUrl);
-  //   const buffer = await response.buffer();
-  //   const fileName = Date.now() + path.extname(imageUrl);
-  //   const filePath = path.join(__dirname, "upload/images", fileName);
-
-  //   // Save image to local storage using fs
-  //   fs.writeFileSync(filePath, buffer);
-  //   return filePath.replace("upload", "images"); // Returning relative path for web access
-  // }
 
   // Stripe
   app.post("/create-checkout-session", async (req, res) => {
