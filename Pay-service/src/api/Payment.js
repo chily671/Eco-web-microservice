@@ -82,6 +82,7 @@ module.exports = async (app, channel) => {
   async function handleResponse(response) {
     try {
       const jsonResponse = await response.json();
+      console.log("🚀 ~ handleResponse ~ jsonResponse:", jsonResponse)
       return {
         jsonResponse,
         httpStatusCode: response.status,
