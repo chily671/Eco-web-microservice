@@ -121,6 +121,8 @@ module.exports = async (app, channel) => {
       // use the cart information passed from the front-end to calculate the order amount detals
       console.log("nono: " + req.body);
       const { jsonResponse, httpStatusCode } = await createOrder(req.body);
+      console.log("🚀 ~ app.post ~ httpStatusCode:", httpStatusCode)
+      console.log("🚀 ~ app.post ~ jsonResponse:", jsonResponse)
       res.status(httpStatusCode).json(jsonResponse);
       console.log(jsonResponse);
       console.log("create order");

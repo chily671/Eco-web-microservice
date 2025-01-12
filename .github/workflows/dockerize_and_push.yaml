@@ -8,7 +8,7 @@ on:
       - '**/Dockerfile'
       - '**/dockerize_and_push.yaml'
       - 'ecommerce-chart/*'
-      - '**/src/*' 
+      - '**/src/*'  
 
 env:
   DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
